@@ -1,0 +1,26 @@
+{
+  "name": "portfolio",
+  "version": "0.0.1",
+  "description": "Portfolio de Lavieille Dylan, étudiant en BTS SIO à St-Louis Chateaulin.",
+  "homepage": "https://github.com/lvlDylan/portfolio#readme",
+  "bugs": {
+    "url": "https://github.com/lvlDylan/portfolio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lvlDylan/portfolio.git"
+  },
+  "license": "MIT",
+  "author": "Lavieille Dylan",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "sass": "sass scss/main.scss:assets/styles/style.css"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
+  },
+  "devDependencies": {
+    "sass": "^1.94.2"
+  }
+}

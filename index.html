@@ -1,0 +1,117 @@
+<!--
+Created by Lavieille Dylan
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Lavieille Dylan - Portfolio</title>
+    <meta name="description" content="Portfolio de Lavieille Dylan"/>
+
+    <!-- OpenGraph Tags -->
+    <meta property="og:title" content="Portfolio de Lavieille Dylan"/>
+    <meta property="og:description" content="Portfolio de Lavieille Dylan"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="#"/>
+    <meta property="og:image" content="#"/>
+    <meta property="og:site_name" content="Portfolio de Lavieille Dylan"/>
+    <meta property="og:locale" content="fr_FR"/>
+
+    <link href="assets/styles/style.css" rel="stylesheet"/>
+    <script src="assets/scripts/theme.js" defer></script>
+
+    <script src="vendors/typed.umd.js" defer></script>
+    <script src="assets/scripts/types.js" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&family=Roboto:wght@500&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+
+<div class="sidebar d-flex flex-column p-4 text-center">
+    <div class="ratio ratio-1x1 rounded-circle bg-primary-subtle mx-auto mb-3" style="width: 100px;">
+        <img src="assets/images/test.jpg" alt="Lavieille Dylan" class="rounded-circle"/>
+    </div>
+    <h4 class="fw-bold">Dylan Lavieille</h4>
+    <span class="text-muted small">Etudiant BTS SIO</span>
+
+    <ul class="nav nav-pills flex-column mb-auto gap-2 text-start">
+        <li class="nav-item"><a href="#home" class="nav-link active"><i class="bi bi-house me-2"></i>Accueil</a></li>
+        <li class="nav-item"><a href="#projets" class="nav-link link-body-emphasis"><i class="bi bi-folder me-2"></i>Projets</a>
+        </li>
+        <li class="nav-item"><a href="#" class="nav-link link-body-emphasis"><i class="bi bi-person me-2"></i> À propos</a>
+        </li>
+        <li class="nav-item"><a href="#" class="nav-link link-body-emphasis"><i class="bi bi-envelope me-2"></i> Contact</a>
+        </li>
+    </ul>
+
+    <div class="mt-4 pt-3 border-top">
+        <button class="btn btn-sm btn-outline-secondary w-100" id="theme-toggle">
+            <i class="bi bi-moon-stars me-2"></i><span>Changer theme</span>
+        </button>
+    </div>
+</div>
+
+<main class="main-content p-5">
+
+    <section id="home"
+             class="container-fluid min-vh-100 d-flex flex-column justify-content-start align-items-center ps-5">
+        <h1>Lavieille Dylan</h1>
+        <p class="lead">Etudiant en BTS SIO à la recherche d'un stage.</p>
+        <h3 class="lead">Je suis <span id="element-tapez"></span></h3>
+    </section>
+
+
+    <section id="projets" class="container-fluid py-5 ps-5 secondary-bg">
+
+        <h2 class="mb-5 fw-bold display-5 border-bottom pb-3">Mes Projets</h2>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Application de notifications personnel</h5>
+                        <p class="card-text text-muted">Création d'une API et d'un site web pour un usage personnel
+                            ainsi qu'une micro application en GO</p>
+                        <a href="https://github.com/lvlDylan/elodieNotifier" class="btn btn-sm btn-primary"
+                           target="_blank">Voir le code</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">AutoUpdater</h5>
+                        <p class="card-text text-muted">Petit script bash pour automatiser les commandes apt update et
+                            apt upgrade. ! Attention, ceci n'est pas à utiliser mais à but pédagique pour apprendre le
+                            bash !</p>
+                        <a href="https://github.com/lvlDylan/BashAutoUpdater" class="btn btn-sm btn-primary"
+                           target="_blank">Voir le code</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Portfolio V1</h5>
+                        <p class="card-text text-muted">Mon premier site personnel réalisé en HTML/CSS pur.</p>
+                        <a href="https://github.com/lvlDylan/portfolio" class="btn btn-sm btn-primary" target="_blank">Voir
+                            le code</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+
+</body>
+</html>
