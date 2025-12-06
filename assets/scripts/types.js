@@ -1,5 +1,5 @@
-const typed = new Typed('#element-tapez', {
-    strings: ['Créatif.', 'Passionné.', 'Investi.'], // Tes textes ici
+const typed = new Typed('#typing-text', {
+    strings: ['créatif.', 'passionné.', 'investi.'], // Tes textes ici
     typeSpeed: 60,
     backSpeed: 30,
     backDelay: 1500,
