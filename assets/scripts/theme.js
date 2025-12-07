@@ -14,15 +14,23 @@ function switchTheme() {
     localStorage.setItem('theme', newTheme);
 }
 
-document.getElementById('theme-toggle').addEventListener('click', () => {
-    switchTheme();
-});
+document.addEventListener('DOMContentLoaded', () => {
+    const btnDesktop = document.getElementById('theme-toggle');
+    const btnMobile = document.getElementById('theme-toggle-mobile');
 
-const navLinks = document.querySelectorAll('.nav-link');
+    if (btnDesktop) {
+        btnDesktop.addEventListener('click', switchTheme);
+    }
+    if (btnMobile) {
+        btnMobile.addEventListener('click', switchTheme);
+    }
 
-navLinks.forEach((link) => {
-    link.addEventListener('click', (e) => {
-        navLinks.forEach(nav => nav.classList.remove('active'));
-        e.target.classList.add('active');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+            navLinks.forEach(nav => nav.classList.remove('active'));
+            e.target.classList.add('active');
+        })
     })
-})
+});

@@ -37,28 +37,34 @@ body {
   --bs-text-muted-rgb: 148, 163, 184;
 }
 
-.sidebar {
+.main-content {
+  padding-top: 70px;
+  margin-left: 0;
+}
 
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: $sidebar-width;
+@media (min-width: 992px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: $sidebar-width;
 
-  background-color: var(--bs-sidebar-bg);
-  border-right: 1px solid var(--bs-border-color);
-  color: var(--bs-body-color);
+    background-color: var(--bs-sidebar-bg);
+    border-right: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color);
 
-  z-index: 100;
-  overflow-y: auto;
+    z-index: 100;
+    overflow-y: auto;
+  }
 
+  .main-content {
+    margin-left: $sidebar-width;
+    min-height: 100vh;
+    padding-top: 0;
+  }
 }
 
 .secondary-bg {
   background-color: var(--bs-sidebar-bg);
-}
-
-.main-content {
-  margin-left: $sidebar-width;
-  min-height: 100vh;
 }
