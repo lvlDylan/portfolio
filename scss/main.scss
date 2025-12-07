@@ -15,6 +15,7 @@ $sidebar-width: 280px;
 
 body {
   font-family: "Roboto Light", Helvetica, Arial, sans-serif;
+  scroll-behavior: smooth;
 }
 
 [data-bs-theme="dark"] {
@@ -42,6 +43,10 @@ body {
   margin-left: 0;
 }
 
+section {
+  scroll-margin-top: 80px;
+}
+
 @media (min-width: 992px) {
   .sidebar {
     position: fixed;
@@ -62,6 +67,10 @@ body {
     margin-left: $sidebar-width;
     min-height: 100vh;
     padding-top: 0;
+  }
+
+  section {
+    scroll-margin-top: 0;
   }
 }
 
