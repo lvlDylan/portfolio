@@ -27,4 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    window.addEventListener('activate.bs.scrollspy', (e) => {
+
+        const activeLink = e.relatedTarget; // Current <a> element activated by Boostrap Spy
+        const targetId = activeLink.getAttribute('href'); // Get href attribute
+
+        menuLinks.forEach(link => {
+            link.classList.remove('active'); // Remove all active classes
+        });
+
+        const mobileLink = document.querySelector(`#mobile-nav a[href="${targetId}"]`); // Get current link on mobile version
+        if (mobileLink) {
+            mobileLink.classList.add('active'); // Add class to current location
+        }
+    });
 });
