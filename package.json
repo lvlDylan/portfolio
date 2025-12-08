@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "sass": "sass scss/main.scss:assets/styles/style.css"
+    "sass": "rm assets/styles/style.css && sass scss/main.scss:assets/styles/style.css"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
