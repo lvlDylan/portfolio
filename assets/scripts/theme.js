@@ -1,11 +1,17 @@
-const savedTheme = localStorage.getItem('theme');
-const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-if (savedTheme) {
+const savedTheme = localStorage.getItem('theme'); // Get theme
+const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; // Get system preferences
+if (savedTheme) { // If it has theme, set it
     document.documentElement.setAttribute('data-bs-theme', savedTheme);
 } else {
-    document.documentElement.setAttribute('data-bs-theme', systemPrefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-bs-theme', systemPrefersDark ? 'dark' : 'light'); // Set system preference
 }
 
+/**
+ * @author Dylan Lavieille
+ * @function
+ *
+ * @description Switch current theme in localStorage and set it in HTML attribute page
+ */
 function switchTheme() {
     const htmlElement = document.documentElement;
     const currentTheme = htmlElement.getAttribute('data-bs-theme');
@@ -15,22 +21,15 @@ function switchTheme() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Get "Changer Theme" button
     const btnDesktop = document.getElementById('theme-toggle');
     const btnMobile = document.getElementById('theme-toggle-mobile');
 
+    // Check if they exist then add event and call switchTheme when event is fired
     if (btnDesktop) {
         btnDesktop.addEventListener('click', switchTheme);
     }
     if (btnMobile) {
         btnMobile.addEventListener('click', switchTheme);
     }
-
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    navLinks.forEach((link) => {
-        link.addEventListener('click', (e) => {
-            navLinks.forEach(nav => nav.classList.remove('active'));
-            e.target.classList.add('active');
-        })
-    })
 });

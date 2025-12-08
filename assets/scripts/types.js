@@ -7,4 +7,4 @@ new Typed('#typing-text', {
     loop: true,
     showCursor: true,
     cursorChar: '|',
-});
+}); // https://github.com/mattboldt/typed.js/
