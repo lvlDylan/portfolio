@@ -13329,7 +13329,7 @@ section {
 }
 
 .text-gradient {
-    background: linear-gradient(45deg, #0d6efd, #6610f2);
+    background: linear-gradient(to right, #38bdf8, #a78bfa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -13350,7 +13350,6 @@ section {
         transform: translateY(-5px);
     }
 }
-
 .hover-scale {
     transition: transform 0.2s ease;
 }
