@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const sections = document.querySelectorAll('section'); // Get all section
-    const navLinks = document.querySelectorAll('.sidebar .nav-link'); // Get nav button from sidebar
+    const navLinks = document.querySelectorAll('.sidebar .nav-link, #mobileMenu .nav-link'); // Get nav button from sidebar or mobile menu
     window.addEventListener('scroll', () => { // Add event on scrolling
         let current = "";
 
