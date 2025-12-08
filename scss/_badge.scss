@@ -1,0 +1,42 @@
+.tech-badge {
+  font-size: 0.85em;
+  padding: 0.5em 0.8em;
+  border-radius: 50rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.card:hover .tech-badge {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.bg-html {
+  background-color: #E34F26;
+}
+
+.bg-css {
+  background-color: #1572B6;
+}
+
+.bg-js {
+  background-color: #F7DF1E;
+  color: black !important;
+}
+
+.bg-ts {
+  background-color: #3178C6;
+}
+
+.bg-bash {
+  background-color: #4EAA25;
+}
+
+.bg-go {
+  background-color: #00ADD8;
+}

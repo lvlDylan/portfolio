@@ -1,0 +1,95 @@
+.terminal-window {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'mononoki', 'Fira Code', 'Consolas', monospace;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  margin: 20px auto;
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.terminal-header {
+  background-color: #2d2d2d;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #3e3e3e;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.red {
+  background-color: #ff5f56;
+}
+
+.yellow {
+  background-color: #ffbd2e;
+}
+
+.green {
+  background-color: #27c93f;
+}
+
+.terminal-title {
+  margin-left: 20px;
+  color: #999;
+  font-size: 0.9em;
+}
+
+.terminal-body {
+  padding: 20px;
+}
+
+.cmd {
+  color: #569cd6;
+  font-weight: bold;
+}
+
+.string {
+  color: #ce9178;
+}
+
+.comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.keyword {
+  color: #c586c0;
+}
+
+.path {
+  color: #9cdcfe;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background-color: #d4d4d4;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
