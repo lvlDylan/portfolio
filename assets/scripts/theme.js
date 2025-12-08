@@ -16,7 +16,13 @@ function switchTheme() {
     const htmlElement = document.documentElement;
     const currentTheme = htmlElement.getAttribute('data-bs-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
     htmlElement.setAttribute('data-bs-theme', newTheme);
+    if (newTheme === 'dark')
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0f172a');
+    else
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f8fafc');
+
     localStorage.setItem('theme', newTheme);
 }
 
