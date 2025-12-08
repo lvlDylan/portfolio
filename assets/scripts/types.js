@@ -1,10 +1,16 @@
 new Typed('#typing-text', {
-    strings: ['rigoureux.', 'créatif.', 'investi.', 'curieux'],
+    strings: [
+        "développeur junior.",
+        "passionné par le back-end et la programmation logicielle.",
+        "un futur développeur.",
+        "étudiant en BTS SIO."
+    ],
     typeSpeed: 60,
     backSpeed: 30,
-    backDelay: 1500,
-    startDelay: 500,
     loop: true,
+    backDelay: 1500,
     showCursor: true,
     cursorChar: '|',
-}); // https://github.com/mattboldt/typed.js/
+});
+
+// https://github.com/mattboldt/typed.js/
