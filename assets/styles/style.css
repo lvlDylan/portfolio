@@ -13111,6 +13111,13 @@ textarea.form-control-lg {
     --bs-sidebar-bg: #ffffff;
 }
 
+.text-gradient {
+    background: linear-gradient(to right, #4f46e5, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 [data-bs-theme=dark] {
     --bs-primary: #38bdf8;
     --bs-primary-rgb: 56, 189, 248;
@@ -13124,6 +13131,13 @@ textarea.form-control-lg {
     --bs-body-color-rgb: 226, 232, 240;
     --bs-text-muted: #94a3b8;
     --bs-text-muted-rgb: 148, 163, 184;
+}
+
+[data-bs-theme=dark] .text-gradient {
+    background: linear-gradient(to right, #38bdf8, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .secondary-bg {
@@ -13326,13 +13340,6 @@ body {
 
 section {
     scroll-margin-top: 80px;
-}
-
-.text-gradient {
-    background: linear-gradient(to right, #38bdf8, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .animate-bounce {
