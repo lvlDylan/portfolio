@@ -1,5 +1,5 @@
 $primary: #4f46e5;
-$secondary: #10b981;
+$secondary: #059669;
 $body-bg: #f8fafc;
 $sidebar-bg: #f1f5f9;
 $body-color: #334155;
@@ -16,33 +16,9 @@ $text-muted: #64748b;
   background-clip: text;
 }
 
-[data-bs-theme="dark"] {
-  --bs-primary: #38bdf8;
-  --bs-primary-rgb: 56, 189, 248;
-
-  --bs-secondary: #a78bfa;
-  --bs-secondary-rgb: 167, 139, 250;
-
-  --bs-body-bg: #0f172a;
-  --bs-body-bg-rgb: 15, 23, 42;
-
-  --bs-sidebar-bg: #1e293b;
-  --bs-sidebar-bg-rgb: 30, 41, 59;
-
-  --bs-body-color: #e2e8f0;
-  --bs-body-color-rgb: 226, 232, 240;
-
-  --bs-text-muted: #94a3b8;
-  --bs-text-muted-rgb: 148, 163, 184;
-
-  .text-gradient {
-    background: linear-gradient(to right, #38bdf8, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+.sidebar {
+  border-right: 1px solid var(--bs-border-color-translucent);
 }
-
 
 .secondary-bg {
   background-color: var(--bs-sidebar-bg);

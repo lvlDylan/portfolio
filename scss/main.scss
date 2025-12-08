@@ -1,8 +1,8 @@
-@use "../node_modules/bootstrap/scss/bootstrap";
-@use "theme.scss";
-@use "terminal.scss";
-@use "badge.scss";
-@use "mediaQueries.scss";
+@import "dark_theme.scss";
+
+@import "terminal.scss";
+@import "badge.scss";
+@import "mediaQueries.scss";
 
 body {
   font-family: "Roboto Light", Helvetica, Arial, sans-serif;
