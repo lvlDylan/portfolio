@@ -27,31 +27,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    const sections = document.querySelectorAll('section'); // Get all section
-    const navLinks = document.querySelectorAll('.sidebar .nav-link, #mobileMenu .nav-link'); // Get nav button from sidebar or mobile menu
-    window.addEventListener('scroll', () => { // Add event on scrolling
-        let current = "";
-
-        const isAtBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10; // Check if its bottom of page
-
-        if (isAtBottom) {
-            current = sections[sections.length - 1].getAttribute("id"); // Set last section
-        } else { // Else get section who is currently watched
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-
-                if (window.scrollY >= (sectionTop - 150)) {
-                    current = section.getAttribute("id");
-                }
-            });
-        }
-
-        navLinks.forEach((link) => {
-            link.classList.remove("active"); // remove class active from every link
-            if (link.getAttribute("href").includes(current)) {
-                link.classList.add("active"); // Add class active for current section
-            }
-        });
-    });
 });

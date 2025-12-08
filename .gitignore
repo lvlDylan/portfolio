@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Don't wan't to upload that on Github
+assets/docs/CV_Dylan_Lavieille.pdf
