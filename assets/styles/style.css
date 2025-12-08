@@ -13108,7 +13108,7 @@ textarea.form-control-lg {
     }
 }
 :root {
-    --bs-sidebar-bg: #ffffff;
+    --bs-sidebar-bg: #f1f5f9;
 }
 
 .text-gradient {
@@ -13132,7 +13132,6 @@ textarea.form-control-lg {
     --bs-text-muted: #94a3b8;
     --bs-text-muted-rgb: 148, 163, 184;
 }
-
 [data-bs-theme=dark] .text-gradient {
     background: linear-gradient(to right, #38bdf8, #a78bfa);
     -webkit-background-clip: text;
