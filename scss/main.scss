@@ -3,6 +3,10 @@
 @import "terminal.scss";
 @import "badge.scss";
 @import "mediaQueries.scss";
+html {
+  scroll-behavior: smooth;
+}
+
 
 body {
   font-family: "Roboto Light", Helvetica, Arial, sans-serif;
