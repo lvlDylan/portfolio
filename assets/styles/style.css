@@ -12155,6 +12155,10 @@ textarea.form-control-lg {
   background-color: #00ADD8;
 }
 
+.bg-c {
+  background-color: #555555;
+}
+
 .main-content {
   padding-top: 70px;
   margin-left: 0;
