@@ -1,0 +1,53 @@
+$primary: #4f46e5;
+$secondary: #059669;
+
+$body-bg: #f8fafc;
+$body-color: darken($body-bg, 70%);
+$text-muted: lighten($body-color, 25%);
+$link-color: $primary;
+
+$sidebar-bg: darken($body-bg, 2%);
+$primary-glow: desaturate(lighten($primary, 10%), 5%);
+
+.text-muted {
+  color: lighten($body-color, 20%);
+}
+
+.card-footer {
+  background-color: darken($body-bg, 3%);
+}
+
+:root {
+  --bs-sidebar-bg: #{$sidebar-bg};
+}
+
+.text-gradient {
+  background: linear-gradient(110deg, $primary 20%, $primary-glow 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 0 rgba($primary, 0.05));
+}
+
+.sidebar {
+  border-right: 1px solid rgba($primary, 0.1);
+}
+
+.secondary-bg {
+  background-color: var(--bs-sidebar-bg);
+}
+
+.card {
+  border: 1px solid rgba($primary, 0.15) !important;
+
+  box-shadow: 0 0 20px rgba($primary, 0.03),
+  0 10px 15px -3px rgba(0, 0, 0, 0.4) !important;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+  &:hover {
+    border-color: rgba($primary, 0.4) !important;
+    box-shadow: 0 0 25px rgba($primary, 0.08),
+    0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+  }
+}

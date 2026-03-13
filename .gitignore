@@ -1,0 +1,31 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+vendor/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+public/assets/css/*.map
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# Editor directories
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Custom exclusions
+public/assets/docs/CV_Dylan_Lavieille.pdf

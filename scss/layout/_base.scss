@@ -1,0 +1,62 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Roboto Light", Helvetica, Arial, sans-serif;
+  scroll-behavior: smooth;
+}
+
+#avatar_container {
+  width: 100px;
+}
+
+#avatar_container_mobile {
+  width: 75px;
+}
+
+section {
+  scroll-margin-top: 80px;
+}
+
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: translateY(-3px);
+}
+
+.typed-cursor {
+  color: #0d6efd;
+  font-size: 1.5rem;
+}
+
+#theme-toggle {
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+.custom-switch {
+  cursor: pointer;
+  width: 2.5em !important;
+  height: 1.25em !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(0, 0, 0, 0.25)'/%3e%3c/svg%3e");
+
+  &:checked {
+    background-color: $primary;
+    border-color: $primary;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.25rem rgba($primary, 0.15);
+    border-color: rgba($primary, 0.5);
+  }
+}
