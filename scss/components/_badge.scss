@@ -11,6 +11,15 @@
   display: inline-block;
 }
 
+.card-skill {
+  border-top-width: 4px !important;
+  border-top-style: solid !important;
+
+  &.frontend     { border-top-color: #007bff !important; }
+  &.backend      { border-top-color: #28a745 !important; }
+  &.software-sys { border-top-color: #6c757d !important; }
+}
+
 .card:hover .tech-badge {
   transform: translateY(-3px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -20,6 +29,7 @@ $tech-colors: (
         "html": #E34F26, "css": #1572B6, "js": #F7DF1E,
         "ts": #3178C6, "php": #777BB4, "sql": #4479A1,
         "bash": #4EAA25, "go": #00ADD8, "c": #555555,
+        "java": #ED8B00, "nodejs": #339933, "csharp": #239120
 );
 
 @each $name, $color in $tech-colors {

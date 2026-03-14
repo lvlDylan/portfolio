@@ -18,5 +18,4 @@ try {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log($e->getMessage());
-    die("Désolé, une erreur de connexion à la base de données est survenue.");
 }
