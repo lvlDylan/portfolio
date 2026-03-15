@@ -1,5 +1,7 @@
 <?php
-include_once "../src/config.php";
+require_once __DIR__ . "/../src/config.php";
+require_once __DIR__ . "/../src/database/database.php";
+
 include "../src/components/head.php";
 ?>
 

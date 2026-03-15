@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../database/database.php";
-
 $sql = "SELECT 
     p.id, 
     p.title, 

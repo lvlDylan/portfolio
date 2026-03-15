@@ -62,6 +62,8 @@ cd portfolio
 php -S localhost -t public
 ```
 
+Vous pouvez désormais y accéder sur http://localhost
+
 ---
 
 ## 📂 Structure du projet

@@ -18,6 +18,7 @@ public/assets/css/*.map
 .env
 .env.local
 .env.*.local
+portfolio_backup.sql
 
 # Editor directories
 .vscode/*

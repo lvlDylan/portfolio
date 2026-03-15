@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../database/database.php";
-
 $sql = "SELECT 
     category, 
     GROUP_CONCAT(name ORDER BY id SEPARATOR ', ') AS stack_names,
