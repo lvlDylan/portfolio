@@ -1,0 +1,32 @@
+.btn-legal {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-decoration: none;
+  position: relative;
+  padding: 0;
+  border: none;
+  background: none;
+  transition: color 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #007bff;
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: #007bff;
+    &::after {
+      width: 100%;
+    }
+  }
+
+  &:focus {
+    box-shadow: none;
+  }
+}

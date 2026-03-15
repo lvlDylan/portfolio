@@ -15,9 +15,23 @@
   border-top-width: 4px !important;
   border-top-style: solid !important;
 
-  &.frontend     { border-top-color: #007bff !important; }
-  &.backend      { border-top-color: #28a745 !important; }
-  &.software-sys { border-top-color: #6c757d !important; }
+  &.frontend {
+    $color-front: #007bff;
+    border-top-color: $color-front !important;
+    .card-title { color: $color-front !important; }
+  }
+
+  &.backend {
+    $color-back: #28a745;
+    border-top-color: $color-back !important;
+    .card-title { color: $color-back !important; }
+  }
+
+  &.software-sys {
+    $color-sys: #6c757d;
+    border-top-color: $color-sys !important;
+    .card-title { color: $color-sys !important; }
+  }
 }
 
 .card:hover .tech-badge {

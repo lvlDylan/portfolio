@@ -20,7 +20,19 @@ include "../src/components/sidebar.php";
 
     <?php include __DIR__ . '/../src/components/footer.php'; ?>
     <?php include __DIR__ . '/../src/components/modal/legal-modal.php'; ?>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false,
+            offset: 100
+        });
+    </script>
 </main>
 </body>
 

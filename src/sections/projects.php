@@ -23,6 +23,7 @@ $projects = isset($stmt) ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
 ?>
 
 <section id="projets" class="container-fluid py-5">
+    <?php $delay = 0; ?>
     <div class="container">
         <h2 class="mb-5 fw-bold display-5 border-bottom pb-3 text-gradient">Mes Projets</h2>
         <div class="row g-4">
@@ -67,7 +68,7 @@ $projects = isset($stmt) ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
                     </div>
                 </div>
                 <div class="col-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0 card-hover">
+                    <div class="card h-100 shadow-sm border-0 card-hover" data-aos="fade-right" data-aos-delay="<?= $delay ?>">
                         <div class="card-body">
                             <h5 class="card-title fw-bold"><?= $project["title"] ?></h5>
                             <p class="card-text text-muted"><?= $project["description_shortened"] ?></p>
@@ -101,7 +102,10 @@ $projects = isset($stmt) ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <?php
+            $delay += 100;
+            endforeach;
+            ?>
         </div>
     </div>
 </section>
