@@ -1,0 +1,22 @@
+#mobileMenu {
+  border-left: 1px solid rgba(var(--bs-primary-rgb), 0.1);
+}
+
+#mobileMenu .nav-link {
+  color: var(--bs-body-color);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+#mobileMenu .nav-link:hover,
+#mobileMenu .nav-link:focus {
+  background-color: rgba(var(--bs-primary-rgb), 0.05);
+  color: var(--bs-primary);
+  transform: translateX(5px);
+}
+
+#avatar_container_mobile {
+  border: 3px solid rgba(var(--bs-primary-rgb), 0.2);
+  padding: 5px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}

@@ -32,7 +32,7 @@ include "../src/components/sidebar.php";
             easing: 'ease-in-out',
             once: true,
             mirror: false,
-            offset: 100
+            offset: 100,
         });
     </script>
 </main>
