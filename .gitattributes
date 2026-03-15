@@ -1,0 +1,5 @@
+*.php linguist-language=php
+*.scss linguist-language=scss
+
+public/assets/css/* linguist-vendored
+
