@@ -6,5 +6,6 @@ SERVER_PATH="/var/www/portfolio"
 
 ssh ${SERVER_USER}@${SERVER_IP} << EOF
     cd ${SERVER_PATH}
-    git pull origin main
+    git fetch origin main
+    git reset --hard origin/main
 EOF
