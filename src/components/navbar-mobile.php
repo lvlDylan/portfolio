@@ -48,8 +48,8 @@
             <div class="d-flex align-items-center justify-content-center gap-2 mt-2">
                 <i class="bi bi-sun-fill text-warning"></i>
                 <div class="form-check form-switch m-0">
-                    <label for="theme-toggle-slider"></label>
-                    <input class="form-check-input custom-switch" type="checkbox" role="switch" id="theme-toggle-slider">
+                    <label for="theme-toggle-slider-mobile"></label>
+                    <input class="form-check-input custom-switch theme-toggle-checkbox" type="checkbox" role="switch" id="theme-toggle-slider-mobile">
                 </div>
                 <i class="bi bi-moon-stars-fill text-primary"></i>
             </div>

@@ -57,26 +57,9 @@
             <i class="bi bi-sun-fill text-warning"></i>
             <div class="form-check form-switch m-0">
                 <label for="theme-toggle-slider"></label>
-                <input class="form-check-input custom-switch" type="checkbox" role="switch" id="theme-toggle-slider">
+                <input class="form-check-input custom-switch theme-toggle-checkbox" type="checkbox" role="switch" id="theme-toggle-slider">
             </div>
             <i class="bi bi-moon-stars-fill text-primary"></i>
         </div>
     </div>
 </div>
-
-<script>
-    const themeToggle = document.getElementById('theme-toggle-slider');
-    const htmlElement = document.documentElement;
-
-    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-
-    htmlElement.setAttribute('data-bs-theme', savedTheme);
-    themeToggle.checked = (savedTheme === 'dark');
-
-    themeToggle.addEventListener('change', () => {
-        const newTheme = themeToggle.checked ? 'dark' : 'light';
-
-        htmlElement.setAttribute('data-bs-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-    });
-</script>
