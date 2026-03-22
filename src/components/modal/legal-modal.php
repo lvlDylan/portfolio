@@ -33,7 +33,14 @@
 
                 <section class="mb-4">
                     <h6 class="fw-bold text-primary">4. Données personnelles & Cookies</h6>
-                    <p>Ce site est statique et n'utilise aucun cookie de traçage publicitaire. Aucune donnée personnelle n'est collectée, à l'exception de celles éventuellement envoyées par l'utilisateur via le formulaire de contact.</p>
+                    <p>Ce site est statique et n'utilise aucun cookie de traçage publicitaire ou de mesure d'audience.</p>
+                    <p class="small mb-2"><strong>Formulaire de contact :</strong></p>
+                    <p class="small mb-2"> Les données collectées (nom, email, message) sont utilisées exclusivement pour répondre à vos demandes de prise de contact professionnelle.</p>
+                    <ul class="small mb-2">
+                        <li><strong>Sous-traitance :</strong> L'envoi des messages est assuré par le service <strong>Brevo</strong> (Sendinblue SAS), agissant en tant que prestataire technique. Vos données transitent par leurs serveurs sécurisés conformément à leur politique de confidentialité.</li>
+                        <li><strong>Conservation :</strong> Vos données sont conservées pour une durée maximale de 2 ans à compter du dernier contact.</li>
+                        <li><strong>Vos droits :</strong> Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données en me contactant à : <a href="mailto:lavieille-d@saint-louis29.net" class="text-decoration-none">lavieille-d@saint-louis29.net</a>.</li>
+                    </ul>
                 </section>
 
                 <section>
@@ -50,6 +57,7 @@
                         <li><strong>Icônes :</strong> <a href="https://devicon.dev/" target="_blank">Devicon</a> (Licence MIT)</li>
                         <li><strong>Polices :</strong> Google Fonts - <a href="https://fonts.google.com/specimen/Roboto" target="_blank">Roboto</a></li>
                         <li><strong>Librairies JS :</strong> <a href="https://github.com/mattboldt/typed.js/" target="_blank">Typed.Js</a> <a href="https://github.com/michalsnik/aos" target="_blank">AOS</a></li>
+                        <li><strong>Envoie d'Email :</strong> <a href="https://www.brevo.com/" target="_blank">Brevo API</a></li>
                     </ul>
                     <p class="small text-muted">
                         <em>Note : Les codes sources développés par mes soins sont disponibles sur mon dépôt GitHub.</em>
