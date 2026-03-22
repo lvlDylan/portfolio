@@ -1,0 +1,73 @@
+document.querySelector('form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+    const originalBtnText = btn.innerHTML;
+
+    if (document.getElementById('honeypot')?.value.length > 0) {
+        return;
+    }
+
+    const showToast = (message, isSuccess = true) => {
+        const toastElement = document.getElementById('liveToast');
+        const toastMessage = document.getElementById('toastMessage');
+        const progressBar = document.getElementById('toastProgress');
+
+        toastElement.classList.remove('text-bg-success', 'text-bg-danger');
+        toastElement.classList.add(isSuccess ? 'text-bg-success' : 'text-bg-danger');
+        progressBar.classList.remove('toast-progress-active');
+        void progressBar.offsetWidth;
+
+        toastMessage.textContent = message;
+        progressBar.classList.add('toast-progress-active');
+
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 5000,
+            pauseOnHover: false
+        });
+
+        toast.show();
+    };
+
+    const formData = new FormData();
+    formData.append('action', 'send_contact');
+    formData.append('name', document.getElementById('name').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('subject', document.getElementById('subject').value);
+    formData.append('message', document.getElementById('message').value);
+
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Envoi en cours...';
+        const response = await fetch('./index.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const text = await response.text();
+        try {
+            const res = JSON.parse(text);
+            const author = res["author"] ?? "None";
+            const error = res["message"] ?? "None";
+
+            if (res.success) {
+                showToast(`Merci ${author}. Votre message a été envoyé !`, true);
+                form.reset();
+            } else {
+                showToast(`Erreur: ${error}`, false);
+            }
+        } catch (e) {
+            console.error("Réponse serveur brute :", text);
+            showToast("Le serveur a renvoyé une réponse invalide.", false);
+        }
+
+    } catch (error) {
+        console.error('Erreur:', error);
+        showToast("Impossible de contacter le serveur.", false);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnText;
+    }
+});

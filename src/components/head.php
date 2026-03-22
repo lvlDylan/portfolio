@@ -25,7 +25,7 @@
 
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"/>
 
-    <link href="/assets/css/style.css" rel="stylesheet"/>
+    <link href="/assets/css/style.min.css" rel="stylesheet"/>
 
     <script src="/assets/js/vendors/typed.umd.js" defer></script>
     <script src="/assets/js/type.js" defer></script>

@@ -1,3 +1,16 @@
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast fade align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage">
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="progress" style="height: 4px; border-radius: 0; background-color: rgba(255,255,255,0.2);">
+            <div id="toastProgress" class="progress-bar bg-white" role="progressbar" style="width: 100%;"></div>
+        </div>
+    </div>
+</div>
+
 <footer class="py-5 mt-5 border-top">
     <div class="container text-center">
         <p class="fw-medium mb-1">&copy; <?= date('Y') ?> Dylan Lavieille</p>

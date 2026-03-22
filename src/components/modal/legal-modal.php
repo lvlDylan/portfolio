@@ -49,7 +49,7 @@
                         <li><strong>Icônes :</strong> <a href="https://fontawesome.com/" target="_blank">Font Awesome</a> (Licence CC BY 4.0)</li>
                         <li><strong>Icônes :</strong> <a href="https://devicon.dev/" target="_blank">Devicon</a> (Licence MIT)</li>
                         <li><strong>Polices :</strong> Google Fonts - <a href="https://fonts.google.com/specimen/Roboto" target="_blank">Roboto</a></li>
-                        <li><strong>Librairies JS :</strong> <a href="https://github.com/mattboldt/typed.js/" target="_blank">Typed.Js</a></li>
+                        <li><strong>Librairies JS :</strong> <a href="https://github.com/mattboldt/typed.js/" target="_blank">Typed.Js</a> <a href="https://github.com/michalsnik/aos" target="_blank">AOS</a></li>
                     </ul>
                     <p class="small text-muted">
                         <em>Note : Les codes sources développés par mes soins sont disponibles sur mon dépôt GitHub.</em>
