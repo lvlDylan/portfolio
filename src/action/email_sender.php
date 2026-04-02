@@ -45,7 +45,7 @@ $data = [
         "email" => $_ENV["BREVO_EMAIL_VERIFIED"]
     ],
     "to" => [
-        ["email" => "lavieilledylan@gmail.com", "name" => "Moi"]
+        ["email" => $_ENV["ADMIN_EMAIL"], "name" => "Moi"]
     ],
     "replyTo" => ["email" => $email, "name" => $name],
     "subject" => "Contact Portfolio : " . $subject,
