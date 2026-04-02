@@ -1,42 +1,19 @@
 .tech-badge {
-  font-size: 0.85em;
-  padding: 0.5em 0.8em;
-  border-radius: 50rem;
+  font-size: 0.8rem;
+  padding: 0.4em 0.8em;
+  border-radius: 6px;
   font-weight: 600;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  color: white;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   text-decoration: none;
-  display: inline-block;
-}
+  transition: transform 0.2s ease;
+  box-shadow: none;
 
-.card-skill {
-  border-top-width: 4px !important;
-  border-top-style: solid !important;
-
-  &.frontend {
-    $color-front: #007bff;
-    border-top-color: $color-front !important;
-    .card-title { color: $color-front !important; }
+  &:hover {
+    transform: translateY(-2px);
   }
-
-  &.backend {
-    $color-back: #28a745;
-    border-top-color: $color-back !important;
-    .card-title { color: $color-back !important; }
-  }
-
-  &.software-sys {
-    $color-sys: #6c757d;
-    border-top-color: $color-sys !important;
-    .card-title { color: $color-sys !important; }
-  }
-}
-
-.card:hover .tech-badge {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 $tech-colors: (
@@ -48,11 +25,14 @@ $tech-colors: (
 
 @each $name, $color in $tech-colors {
   .bg-#{$name} {
-    background-color: $color;
-    @if (lightness($color) > 70%) {
-      color: #000 !important;
+    background-color: rgba($color, 0.15);
+
+    border: 1px solid rgba($color, 0.2);
+
+    @if (lightness($color) > 65%) {
+      color: darken($color, 95%) !important;
     } @else {
-      color: #fff !important;
+      color: $color !important;
     }
   }
 }

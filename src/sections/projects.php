@@ -23,7 +23,7 @@ $projects = isset($stmt) ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
 <section id="projets" class="container-fluid py-5">
     <?php $delay = 0; ?>
     <div class="container">
-        <h2 class="mb-5 fw-bold display-5 border-bottom pb-3 text-gradient">Mes Projets</h2>
+        <h2 class="mb-5 fw-bold display-5 border-bottom pb-3">Mes Projets</h2>
         <div class="row g-4">
             <?php foreach ($projects as $project): ?>
                 <div class="modal fade" id="projectModal<?= $project['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $project['id'] ?>" aria-hidden="true">
@@ -39,7 +39,7 @@ $projects = isset($stmt) ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
                                 <p class="lead"><?= nl2br(htmlspecialchars($project["description"])) ?></p>
 
                                 <h6 class="fw-bold mt-4">Technologies utilisées :</h6>
-                                <div class="d-flex flex-wrap gap-2 mb-4">
+                                <div class="d-flex flex-wrap gap-2 mb-4 mt-2">
                                     <?php
                                     if (!empty($project['stack_icons'])):
                                         $icons = explode(',', $project['stack_icons']);
@@ -55,10 +55,9 @@ $projects = isset($stmt) ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
                                 <a href="<?= htmlspecialchars($project['github_link']) ?>"
                                    target="_blank"
-                                   class="btn btn-dark">
+                                   class="btn btn-primary">
                                     Voir le code sur GitHub
                                 </a>
                             </div>

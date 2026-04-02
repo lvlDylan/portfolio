@@ -1,14 +1,11 @@
 new Typed('#typing-text', {
     strings: [
-        "créateur de solutions logicielles.",
-        "développeur Back-End.",
-        "passionné par le Java et le Node.js.",
-        "étudiant en BTS SIO.",
+        "recherche un stage du 26 mai au 4 juillet."
     ],
-    typeSpeed: 40,
+    typeSpeed: 50,
     backSpeed: 25,
-    loop: true,
-    backDelay: 2000,
+    loop: false,
+    backDelay: 3000,
     startDelay: 500,
     showCursor: true,
     cursorChar: '|',

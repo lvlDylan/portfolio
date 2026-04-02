@@ -34,7 +34,7 @@ $display_icons = [
 <section id="skills" class="py-5">
     <?php $delay = 0; ?>
     <div class="container">
-        <h2 class="mb-5 fw-bold display-5 border-bottom pb-3 text-gradient">Mes Compétences</h2>
+        <h2 class="mb-5 fw-bold display-5 border-bottom pb-3">Mes Compétences</h2>
         <div class="row g-4">
             <?php foreach ($skills as $skill): ?>
             <div class="col-md-6 col-lg-4">

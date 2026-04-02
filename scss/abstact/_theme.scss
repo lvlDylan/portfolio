@@ -1,13 +1,13 @@
-$primary: #4f46e5;
-$secondary: #059669;
+$primary: #4338ca;
+$secondary: #64748b;
 
 $body-bg: #f8fafc;
-$body-color: darken($body-bg, 70%);
-$text-muted: lighten($body-color, 25%);
+$body-color: #334155;
+$text-muted: #94a3b8;
 $link-color: $primary;
 
-$sidebar-bg: darken($body-bg, 2%);
-$primary-glow: desaturate(lighten($primary, 10%), 5%);
+$sidebar-bg: #ffffff;
+$primary-glow: rgba($primary, 0.15);
 
 .text-muted {
   color: lighten($body-color, 20%);
@@ -19,14 +19,6 @@ $primary-glow: desaturate(lighten($primary, 10%), 5%);
 
 :root {
   --bs-sidebar-bg: #{$sidebar-bg};
-}
-
-.text-gradient {
-  background: linear-gradient(110deg, $primary 20%, $primary-glow 80%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 1px 0 rgba($primary, 0.05));
 }
 
 .sidebar {

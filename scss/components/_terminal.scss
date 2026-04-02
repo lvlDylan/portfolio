@@ -13,6 +13,16 @@
   text-align: left;
 }
 
+.terminal-window {
+  .text-muted {
+    color: #94a3b8 !important;
+  }
+
+  .text-primary {
+    color: #818cf8 !important;
+  }
+}
+
 .terminal-header {
   background-color: #2d2d2d;
   padding: 10px 15px;
@@ -59,9 +69,7 @@
   font-weight: bold;
 }
 
-.string {
-  color: #ce9178;
-}
+
 
 .comment {
   color: #6a9955;

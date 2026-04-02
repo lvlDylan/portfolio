@@ -1,14 +1,13 @@
 <section id="hero"
-         class="container min-vh-100 d-flex flex-column justify-content-start align-items-center ps-lg-5 text-center">
+         class="container min-vh-100 d-flex flex-column justify-content-start align-items-center ps-lg-5">
 
-    <span class="badge rounded-pill bg-primary-subtle text-primary mb-3 px-3 py-3 shadow-sm sticky-top">Disponible du 26 mai au 30 juin 2025</span>
-    <h1 class="display-1 fw-bold mb-2">Dylan <span class="text-gradient">Lavieille</span></h1>
-    <h2 class="h2 text-muted mb-4">Je suis <span id="typing-text"
-                                                 class="fw-semibold text-gradient">étudiant en BTS SIO.</span>
+    <h1 class="display-3 fw-bold mb-2">Dylan Lavieille</h1>
+    <h2 class="h2 text-muted mb-4">Je <span id="typing-text"
+                                                 class="fw-semibold"></span>
     </h2>
 
     <div class="col-lg-8 mx-auto">
-        <p class="lead text-primary mb-5">
+        <p class="lead mb-5">
             Étudiant en <span class="fw-semibold">BTS SIO (SLAM)</span>,
             je conçois des applications web et logicielles sur mesure.
             Actuellement à la recherche d'un stage, je suis prêt à transformer mes compétences en solutions
@@ -26,7 +25,7 @@
             </svg>
         </a>
         <a href="/assets/docs/CV_Dylan_Lavieille.pdf" target="_blank"
-           class="btn btn-outline-secondary btn-lg px-4 rounded-pill hover-scale">
+           class="btn btn-outline-primary btn-lg px-4 rounded-pill hover-scale">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  class="bi bi-file-earmark-person me-2" viewBox="0 0 16 16">
                 <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -48,33 +47,34 @@
             </div>
 
             <div class="terminal-body">
-
                 <div>
-                    <span class="path">étudiant@bts-sio:~/portfolio</span> $
-                    <span class="cmd">./afficher_profil.sh</span>
+                    <span style="color: #4ade80;">dylan@bts-sio</span>
+                    <span class="text-white">:</span><span style="color: #38bdf8;">~/portfolio</span>
+                    <span class="text-white">$&nbsp;</span><span style="color: #fde047;">./recherche_stage.sh</span><br><br>
                 </div>
                 <br>
 
                 <div>
-                    <span class="keyword">const</span> <span class="path">devProfile</span> = {<br>
-                    &nbsp;&nbsp;nom: <span class="string">"Dylan Lavieille"</span>,<br>
-                    &nbsp;&nbsp;statut: <span class="string">"Étudiant BTS SIO - Option SLAM"</span>,<br>
-                    &nbsp;&nbsp;etablissement: <span class="string">"Saint-Louis Châteaulin"</span>,<br>
-                    &nbsp;&nbsp;passion: <span class="string">"Développement Web & Logiciel"</span>,<br>
-                    &nbsp;&nbsp;stack: [<span class="string">"PHP"</span>, <span class="string">"Java"</span>, <span
-                            class="string">"SQL"</span>, <span class="string">"JavaScript"</span>, <span class="string">"Python"</span>],<br>
-                    &nbsp;&nbsp;objectif: <span class="string">"Recherche de stage"</span><br>
-                    };
+                    <span style="color: #c084fc;">></span> <span class="text-white-50">Initialisation du processus...</span><br>
+                    <span style="color: #c084fc;">></span> <span class="text-white-50">Vérification du profil&nbsp;&nbsp;&nbsp;&nbsp; :</span> <span style="color: #e2e8f0;">Étudiant BTS SIO (SLAM)</span> <span style="color: #4ade80;">[OK]</span><br>
+                    <span style="color: #c084fc;">></span> <span class="text-white-50">Chargement des compétences :</span> <span style="color: #e2e8f0;">Web & Logiciel</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #4ade80;">[OK]</span><br>
+
+                    <span style="color: #c084fc;">></span> <span class="text-white-50">Analyse des disponibilités :</span><br>
+                    <span style="color: #38bdf8;">&nbsp;&nbsp;[████████████████████]</span> <span class="text-white">100%</span><br>
+
+                    <span style="color: #c084fc;">></span> <span class="text-white-50">Résultat :</span> <span style="color: #e2e8f0;">Disponible du </span><span style="color: #fde047;">26 Mai</span><span style="color: #e2e8f0;"> au </span><span style="color: #fde047;">04 Juillet 2026</span><span style="color: #e2e8f0;">.</span><br>
+
+                    <span style="color: #c084fc;">></span> <span class="text-white-50">Statut&nbsp;&nbsp;&nbsp;:</span> <span style="color: #4ade80;">Prêt à intégrer votre équipe technique.</span><br>
+
+                    <span style="color: #c084fc;">></span> <span class="text-white-50">En attente de la commande d'exécution (contact)...</span><br><br>
                 </div>
                 <br>
 
                 <div class="comment">
-                    // Prêt à relever de nouveaux défis techniques.
+                    <span style="color: #65a30d;">// Prêt à relever de nouveaux défis techniques.</span><br><br>
                 </div>
-                <br>
-
                 <div>
-                    <span class="path">étudiant@bts-sio:~/portfolio</span> $ <span class="cursor"></span>
+                    <span style="color: #4ade80;">étudiant@bts-sio</span><span class="text-white">:</span><span style="color: #38bdf8;">~/portfolio</span> <span class="text-white">$</span> <span class="text-white">_</span>
                 </div>
 
             </div>

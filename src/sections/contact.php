@@ -1,6 +1,6 @@
 <section id="contact" class="container-fluid py-5">
     <div class="container">
-        <h2 class="mb-5 fw-bold display-5 border-bottom pb-3 text-gradient">Me contacter</h2>
+        <h2 class="mb-5 fw-bold display-5 border-bottom pb-3 ">Me contacter</h2>
 
         <div class="row justify-content-center">
             <div class="col-lg-8">
