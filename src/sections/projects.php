@@ -55,11 +55,13 @@ $projects = isset($stmt) ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
                                 </div>
                             </div>
                             <div class="modal-footer">
+                                <?php if (!empty($project['github_link'])): ?>
                                 <a href="<?= htmlspecialchars($project['github_link']) ?>"
                                    target="_blank"
                                    class="btn btn-primary">
                                     Voir le code sur GitHub
                                 </a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

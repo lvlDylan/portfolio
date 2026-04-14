@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "/../../src/config.php";
-require_once __DIR__ . "/../../src/database/database.php";
-require_once __DIR__ . "/../../vendor/autoload.php";
+require_once __DIR__ . "/../../../src/config.php";
+require_once __DIR__ . "/../../../src/database/database.php";
+require_once __DIR__ . "/../../../vendor/autoload.php";
 
 use Dylan\Api\Logger;
 use Dylan\Api\TokenManager;
@@ -44,7 +44,7 @@ if (empty($data["description"])) {
 }
 
 if (empty($data["stacks"])) {
-    Logger::log("info", $_SERVER["REMOTE_ADDR"], "[ERREUR] Aucune stacks.");
+    Logger::log("info", $_SERVER["REMOTE_ADDR"], "[ERREUR] Aucune stack.");
     http_response_code(400);
     echo json_encode(["status" => "error", "message" => "Au moins une stack est obligatoire."]);
     exit();
@@ -61,8 +61,8 @@ if (!isset($stmt)) {
 
 $stmt->bindValue(1, $data["title"]);
 $stmt->bindValue(2, $data["description"]);
-$stmt->bindValue(3, $data["description_shortened"] ??  "");
-$stmt->bindValue(4, $data["github_url"] ?? "");
+$stmt->bindValue(3, $data["descriptionShortened"] ??  "");
+$stmt->bindValue(4, $data["githubLink"] ?? "");
 $stmt->execute();
 
 $projectId = $pdo->lastInsertId();
