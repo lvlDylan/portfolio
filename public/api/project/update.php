@@ -73,17 +73,23 @@ try {
         $sourceImage = imagecreatefromstring($imageData);
 
         if ($sourceImage !== false) {
-            $fileName = "project_" . $data["id"] . ".webp";
-            $uploadDir = __DIR__ . "/../../../public/assets/images/projects/";
+            $uploadDir = __DIR__ . "/../../../public/assets/images/projets/";
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
 
-            $filePath = $uploadDir . $fileName;
+            $baseName = "project_" . $data["id"];
+            $webpFile = "project_" . $data["id"] . ".webp";
+            $pngFile = "project_" . $data["id"] . ".png";
 
-            if (imagewebp($sourceImage, $filePath, 80)) {
+            $resWebp = imagewebp($sourceImage, $uploadDir . $webpFile, 80);
+            $resPng  = imagepng($sourceImage, $uploadDir . $pngFile, 6);
+
+            if ($resWebp && $resPng) {
                 imagedestroy($sourceImage);
-                $sqlPath = "/project_" . $data["id"] . ".webp";
+
+                $sqlPath = "/" . $webpFile;
+
                 $updateStmt = $pdo->prepare("UPDATE projects SET image_full = ? WHERE id = ?");
                 $updateStmt->bindValue(1, $sqlPath);
                 $updateStmt->bindValue(2, $data["id"]);
