@@ -2,6 +2,7 @@
 
 namespace Dylan\Api;
 
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Random\RandomException;
@@ -27,7 +28,7 @@ class TokenManager
         return JWT::encode($payload, self::$key, "HS256");
     }
 
-    public static function getRefreshToken()
+    public static function getRefreshToken(): ?string
     {
         try {
             return bin2hex(random_bytes(32));
@@ -36,16 +37,16 @@ class TokenManager
         }
     }
 
-    public static function decodeAccessToken($token)
+    public static function decodeAccessToken($token): ?\stdClass
     {
         try {
             return JWT::decode($token, new Key(self::$key, 'HS256'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
 
-    public static function setRefreshToken($pdo, $refreshToken, $userId)
+    public static function setRefreshToken($pdo, $refreshToken, $userId): void
     {
 
         $deleteSql = "DELETE FROM refresh_tokens WHERE user_id = :user_id";

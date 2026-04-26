@@ -62,12 +62,41 @@ try {
         }
     }
 
+    if (!empty($data["image"])) {
+        Logger::log("info", $_SERVER["REMOTE_ADDR"], "[SUCCESS] Données d'images trouvée.");
+        $base64Str = $data["image"];
+
+        $base64Str = preg_replace('#^data:image/\w+;base64,#i', '', $base64Str);
+        $imageData = base64_decode($base64Str);
+
+        $sourceImage = imagecreatefromstring($imageData);
+
+        if ($sourceImage !== false) {
+            $fileName = "project_" . $data["id"] . ".webp";
+            $uploadDir = __DIR__ . "/../../../public/assets/images/projects/";
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $filePath = $uploadDir . $fileName;
+
+            if (imagewebp($sourceImage, $filePath, 80)) {
+                imagedestroy($sourceImage);
+                $sqlPath = "/project_" . $data["id"] . ".webp";
+                $updateStmt = $pdo->prepare("UPDATE projects SET image_full = ? WHERE id = ?");
+                $updateStmt->bindValue(1, $sqlPath);
+                $updateStmt->bindValue(2, $data["id"]);
+                $updateStmt->execute();
+            }
+        }
+    }
+
     Logger::log("info", $_SERVER["REMOTE_ADDR"], "[SUCCESS] Projet ID " . $data["id"] . " mis à jour.");
     echo json_encode(["status" => "success", "message" => "Projet mis à jour avec succès !"]);
 
 } catch (Exception $e) {
-
     Logger::log("error", $_SERVER["REMOTE_ADDR"], "[SQL ERROR] Update failed: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(["status" => "error", "message" => "Erreur lors de la mise à jour."]);
+    exit();
 }

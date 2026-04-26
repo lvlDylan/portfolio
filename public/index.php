@@ -63,7 +63,6 @@ include __DIR__ . "/../src/components/sidebar.php";
             themeToggles.forEach(t => t.checked = toggle.checked);
         });
     });
-
 </script>
 
 </body>

@@ -38,6 +38,7 @@ if (empty($data["title"])) {
 }
 
 if (empty($data["description"])) {
+    Logger::log("info", $_SERVER["REMOTE_ADDR"], "[ERREUR] Aucune description.");
     http_response_code(400);
     echo json_encode(["status" => "error", "message" => "Une description est obligatoire."]);
     exit();
@@ -63,13 +64,49 @@ $stmt->bindValue(1, $data["title"]);
 $stmt->bindValue(2, $data["description"]);
 $stmt->bindValue(3, $data["descriptionShortened"] ??  "");
 $stmt->bindValue(4, $data["githubLink"] ?? "");
+
+if (isset($sqlPath))
+    $stmt->bindValue(5, $sqlPath);
+else
+    $stmt->bindValue(5, null);
+
 $stmt->execute();
 
 $projectId = $pdo->lastInsertId();
+
 if (is_array($data["stacks"])) {
     $stmtStack = $pdo->prepare("INSERT INTO project_stacks (project_id, stack_id) VALUES (?, ?)");
     foreach ($data["stacks"] as $stackId) {
         $stmtStack->execute([$projectId, $stackId]);
+    }
+}
+
+if (!empty($data["image"])) {
+    Logger::log("info", $_SERVER["REMOTE_ADDR"], "[SUCCESS] Données d'images trouvée.");
+    $base64Str = $data["image"];
+
+    $base64Str = preg_replace('#^data:image/\w+;base64,#i', '', $base64Str);
+    $imageData = base64_decode($base64Str);
+
+    $sourceImage = imagecreatefromstring($imageData);
+
+    if ($sourceImage !== false) {
+        $fileName = "project_" . $projectId . ".webp";
+        $uploadDir = __DIR__ . "/../../../public/assets/images/projects/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $filePath = $uploadDir . $fileName;
+
+        if (imagewebp($sourceImage, $filePath, 80)) {
+            imagedestroy($sourceImage);
+            $sqlPath = "/project_" . $projectId . ".webp";
+            $updateStmt = $pdo->prepare("UPDATE projects SET image_full = ? WHERE id = ?");
+            $updateStmt->bindValue(1, $sqlPath);
+            $updateStmt->bindValue(2, $projectId);
+            $updateStmt->execute();
+        }
     }
 }
 
