@@ -35,6 +35,12 @@ if (empty($data["id"]) || empty($data["title"])) {
     exit();
 }
 
+if (strlen($data["description_shortened"]) > 100) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "La description courte ne doit pas excéder 100 caractères."]);
+    exit();
+}
+
 try {
     $sql = "UPDATE projects 
             SET title = ?, 

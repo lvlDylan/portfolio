@@ -44,6 +44,12 @@ if (empty($data["description"])) {
     exit();
 }
 
+if (strlen($data["description_shortened"]) > 100) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "La description courte ne doit pas excéder 100 caractères."]);
+    exit();
+}
+
 if (empty($data["stacks"])) {
     Logger::log("info", $_SERVER["REMOTE_ADDR"], "[ERREUR] Aucune stack.");
     http_response_code(400);
