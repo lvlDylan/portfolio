@@ -64,12 +64,6 @@ $stmt->bindValue(1, $data["title"]);
 $stmt->bindValue(2, $data["description"]);
 $stmt->bindValue(3, $data["descriptionShortened"] ??  "");
 $stmt->bindValue(4, $data["githubLink"] ?? "");
-
-if (isset($sqlPath))
-    $stmt->bindValue(5, $sqlPath);
-else
-    $stmt->bindValue(5, null);
-
 $stmt->execute();
 
 $projectId = $pdo->lastInsertId();
@@ -81,9 +75,9 @@ if (is_array($data["stacks"])) {
     }
 }
 
-if (!empty($data["image"])) {
+if (!empty($data["image_full"])) {
     Logger::log("info", $_SERVER["REMOTE_ADDR"], "[SUCCESS] Données d'images trouvée.");
-    $base64Str = $data["image"];
+    $base64Str = $data["image_full"];
 
     $base64Str = preg_replace('#^data:image/\w+;base64,#i', '', $base64Str);
     $imageData = base64_decode($base64Str);
@@ -91,17 +85,23 @@ if (!empty($data["image"])) {
     $sourceImage = imagecreatefromstring($imageData);
 
     if ($sourceImage !== false) {
-        $fileName = "project_" . $projectId . ".webp";
-        $uploadDir = __DIR__ . "/../../../public/assets/images/projects/";
+        $uploadDir = __DIR__ . "/../../../public/assets/images/projets/";
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
 
-        $filePath = $uploadDir . $fileName;
+        $baseName = "project_" . $projectId;
+        $webpFile = "project_" . $projectId . ".webp";
+        $pngFile = "project_" . $projectId . ".png";
 
-        if (imagewebp($sourceImage, $filePath, 80)) {
+        $resWebp = imagewebp($sourceImage, $uploadDir . $webpFile, 80);
+        $resPng  = imagepng($sourceImage, $uploadDir . $pngFile, 6);
+
+        if ($resWebp && $resPng) {
             imagedestroy($sourceImage);
-            $sqlPath = "/project_" . $projectId . ".webp";
+
+            $sqlPath = "/" . $webpFile;
+
             $updateStmt = $pdo->prepare("UPDATE projects SET image_full = ? WHERE id = ?");
             $updateStmt->bindValue(1, $sqlPath);
             $updateStmt->bindValue(2, $projectId);

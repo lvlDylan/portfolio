@@ -62,9 +62,9 @@ try {
         }
     }
 
-    if (!empty($data["image"])) {
+    if (!empty($data["image_full"])) {
         Logger::log("info", $_SERVER["REMOTE_ADDR"], "[SUCCESS] Données d'images trouvée.");
-        $base64Str = $data["image"];
+        $base64Str = $data["image_full"];
 
         $base64Str = preg_replace('#^data:image/\w+;base64,#i', '', $base64Str);
         $imageData = base64_decode($base64Str);

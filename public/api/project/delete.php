@@ -35,10 +35,19 @@ if (!$id) {
 }
 
 try {
+
     $sql = "DELETE FROM projects WHERE id = ?";
     $stmt = isset($pdo) ? $pdo->prepare($sql) : null;
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$id]);
+
+    $baseName = __DIR__ . "/../../../public/assets/images/projets/projet_" . $id;
+    $filesToDelete = [$baseName . ".webp", $baseName . ".png"];
+    foreach ($filesToDelete as $file) {
+        if (file_exists($file)) {
+            unlink($file);
+        }
+    }
 
     echo json_encode(["status" => "success", "message" => "Projet $id supprimé."]);
 } catch (PDOException $e) {
