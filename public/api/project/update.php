@@ -67,6 +67,7 @@ try {
         $base64Str = $data["image_full"];
 
         $base64Str = preg_replace('#^data:image/\w+;base64,#i', '', $base64Str);
+        $base64Str = str_replace(' ', '+', $base64Str);
         $imageData = base64_decode($base64Str);
 
         $sourceImage = imagecreatefromstring($imageData);
