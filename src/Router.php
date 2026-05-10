@@ -16,8 +16,11 @@ class Router
 
     public function __construct()
     {
+        $this->addRoute("GET", "/", "MainController", "render");
         $this->addRoute("GET", "/api/projects", "Api\ProjectController", "getProjects");
         $this->addRoute("GET", "/api/stacks", "Api\StackController", "getStacks");
+
+        $this->addRoute("POST", "/api/contact", "Api\ContactController", "handleContact");
     }
 
     /**
@@ -44,6 +47,10 @@ class Router
     public function run(): void
     {
         $uri = strtok($_SERVER['REQUEST_URI'], '?');
+        if ($uri !== '/' && str_ends_with($uri, '/')) {
+            $uri = substr($uri, 0, -1);
+        }
+
         $method = $_SERVER['REQUEST_METHOD'];
 
         foreach ($this->routes as $route) {

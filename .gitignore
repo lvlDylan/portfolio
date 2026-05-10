@@ -22,6 +22,9 @@ public/assets/css/*.map
 portfolio_backup.sql
 remote_deploy_env.sh
 
+# Avoid CV on GITHUB
+public/docs/CV-Dylan-Lavieille-2026-full.pdf
+
 # Editor directories
 .vscode/*
 !.vscode/extensions.json
@@ -29,6 +32,4 @@ remote_deploy_env.sh
 *.swp
 *.swo
 .DS_Store
-
-# Custom exclusions
-public/assets/docs/CV_Dylan_Lavieille.pdf
+*.sh

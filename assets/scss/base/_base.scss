@@ -1,0 +1,99 @@
+html, body {
+  font-family: "Roboto Light", Helvetica, Arial, sans-serif;
+  scroll-behavior: smooth;
+  transition: var(--theme-transition);
+}
+
+.card, .sidebar, .navbar, .nav-link {
+  transition: var(--theme-transition);
+}
+
+.card {
+  background-color: var(--bs-sidebar-bg) !important;
+  border: 1px solid var(--bs-card-border) !important;
+  box-shadow: var(--bs-card-shadow) !important;
+
+  &:hover {
+    border-color: var(--bs-primary) !important;
+    transform: translateY(-3px);
+  }
+
+  .card-footer {
+    background-color: rgba(var(--bs-primary-rgb), 0.03);
+  }
+}
+
+
+#avatar_container {
+  width: 100px;
+}
+
+#avatar_container_mobile {
+  width: 75px;
+}
+
+section {
+  scroll-margin-top: 80px;
+}
+
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: translateY(-3px);
+}
+
+.typed-cursor {
+  color: #0d6efd;
+  font-size: 1.5rem;
+}
+
+#theme-toggle {
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+.theme-switch-container {
+  .theme-icon-sun {
+    color: #ffc107 !important;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 5px rgba(255, 193, 7, 0.2));
+  }
+
+  .theme-icon-moon {
+    color: var(--bs-secondary-color) !important;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+  }
+
+  &:has(.theme-toggle-checkbox:checked) {
+    .theme-icon-sun {
+      color: var(--bs-secondary-color) !important;
+      opacity: 0.5;
+      transform: scale(0.9);
+    }
+
+    .theme-icon-moon {
+      color: #818cf8 !important;
+      opacity: 1;
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 8px rgba(129, 140, 248, 0.4));
+    }
+  }
+}
+
+.custom-switch {
+  &:checked {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+  }
+}

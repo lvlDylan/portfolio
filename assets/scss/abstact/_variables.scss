@@ -1,0 +1,56 @@
+$indigo-600: #4338ca;
+$indigo-400: #818cf8;
+$slate-500:  #64748b;
+$slate-800:  #1e293b;
+$slate-900:  #0f172a;
+
+$primary:    $indigo-600;
+$secondary:  $slate-500;
+$body-bg:    #f8fafc;
+$body-color: #334155;
+
+$theme-colors: (
+        "primary":    $primary,
+        "secondary":  $secondary
+);
+
+
+:root {
+  --bs-primary: #{$primary};
+  --bs-primary-rgb: #{to-rgb($primary)};
+
+  --bs-body-bg: #{$body-bg};
+  --bs-body-color: #{$body-color};
+
+  --bs-sidebar-bg: #ffffff;
+  --bs-sidebar-border: rgba(#{$primary}, 0.1);
+
+  --bs-card-bg: var(--bs-sidebar-bg);
+  --bs-card-footer-bg: #f1f5f9;
+  --bs-card-border: rgba(#{$primary}, 0.15);
+  --bs-card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --bs-card-glow: rgba(#{$primary}, 0.03);
+
+  --theme-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+[data-bs-theme="dark"] {
+  --bs-primary: #{$indigo-400};
+  --bs-primary-rgb: #{to-rgb($indigo-400)};
+
+  --bs-body-bg: #{$slate-900};
+  --bs-body-color: #f1f5f9;
+  --bs-secondary-color: #94a3b8;
+
+  --bs-sidebar-bg: #{$slate-800};
+  --bs-sidebar-border: rgba(255, 255, 255, 0.1);
+
+  --bs-card-footer-bg: rgba(0, 0, 0, 0.2);
+  --bs-card-border: rgba(255, 255, 255, 0.1);
+  --bs-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --bs-card-glow: rgba(0, 0, 0, 0);
+
+  --bs-link-color: var(--bs-primary);
+  --bs-link-hover-color: #{lighten($indigo-400, 10%)};
+}

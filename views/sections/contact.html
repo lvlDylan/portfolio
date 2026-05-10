@@ -1,0 +1,68 @@
+<section id="contact" class="container-fluid py-5">
+    <div class="container">
+        <h2 class="mb-5 fw-bold display-5 border-bottom pb-3 ">Me contacter</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 rounded-4 secondary-bg">
+                    <div class="card-body p-lg-5">
+                        <div class="text-center mb-5">
+                            <p class="lead text-muted">
+                                Je suis actuellement à la recherche d'un stage de <span class="fw-bold text-primary">4 à 6 semaines</span>
+                                à partir du <span class="fw-bold text-primary">26 mai 2025.</span>
+                            </p>
+                            <p class="text-muted small">Mon profil vous plaît ? Envoyez-moi un message !</p>
+                        </div>
+
+                        <form id="contactForm">
+
+                            <div class="visually-hidden"> <!-- Honey pot in order to avoid robot spam (look at email_sender.php)-->
+                                <label for="honeypot">Ne pas remplir ce champ si vous êtes humain :</label>
+                                <input type="text" name="honeypot" id="honeypot" tabindex="-1" autocomplete="off">
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Votre nom" minlength="3" required>
+                                        <label for="name">Votre nom</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="nom@exemple.com" required>
+                                        <label for="email">Votre adresse email</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="subject" name="subject" placeholder="Objet">
+                                        <label for="subject">Objet du message</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating mb-4">
+                                        <textarea class="form-control" id="message" placeholder="Votre message" name="message" style="height: 150px;" maxlength="5000" required></textarea>
+                                        <label for="message">Comment puis-je vous aider ?</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">
+                                        Envoyer le message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="mt-5 pt-4 border-top border-light-subtle text-center">
+                            <p class="mb-2 text-muted italic">Vous préférez consulter mon parcours en détail ?</p>
+                            <a href="/docs/CV-Dylan-Lavieille-2026-full.pdf" target="_blank" class="text-decoration-none fw-bold link-primary">
+                                <i class="bi bi-file-earmark-person me-1"></i> Télécharger mon CV (PDF)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
