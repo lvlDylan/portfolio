@@ -18,9 +18,9 @@
 
 <main class="main-content mt-lg-3">
     <?= $content ?>
+    <?php require_once ROOT . "/views/partials/_footer.php"; ?>
 </main>
 
-<?php require_once ROOT . "/views/partials/_footer.php"; ?>
-
+<?php require_once ROOT . "/views/partials/_scripts.php"; ?>
 </body>
 </html>

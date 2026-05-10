@@ -5,17 +5,33 @@ namespace App\Models;
 use App\Services\Database;
 use PDO;
 
+/**
+ * Class Projects
+ * * Gère la logique de récupération des projets du portfolio.
+ * Cette classe est responsable de l'agrégation des projets avec leurs stacks techniques
+ * associées via une table de liaison.
+ * * @package App\Models
+ */
 readonly class Projects
 {
+    /**
+     * @var PDO Instance de connexion à la base de données.
+     */
     private PDO $db;
 
+    /**
+     * Projects constructor.
+     * Initialise la connexion via le Singleton Database.
+     */
     public function __construct()
     {
         $this->db = Database::getInstance();
     }
 
     /**
-     * Récupère les projets avec leurs technologies respectives.
+     * Exécute la requête SQL pour récupérer les projets et leurs technologies.
+     * * Utilise GROUP_CONCAT pour agréger les noms, icônes et couleurs des stacks
+     * afin d'éviter le problème de duplication de lignes lors des jointures.
      * * @return array<int, array{
      * id: string,
      * title: string,
@@ -23,10 +39,10 @@ readonly class Projects
      * github_link: string,
      * description_shortened: string,
      * image_full: string,
-     * stack_names: string,
-     * stack_icons: string,
-     * stack_colors: string
-     * }> Liste des catégories avec leurs stacks concaténées.
+     * stack_names: ?string,
+     * stack_icons: ?string,
+     * stack_colors: ?string
+     * }> Liste brute issue de la base de données.
      */
     private function findAll(): array
     {
@@ -45,7 +61,10 @@ readonly class Projects
     }
 
     /**
-     * @return array<int, array{
+     * Formate et retourne la liste des projets prête pour la vue.
+     * * Transforme les chaînes de caractères délimitées par des virgules en tableaux PHP
+     * et assure le cast des types (ex: id en int).
+     * * @return array<int, array{
      * id: int,
      * title: string,
      * description: string,
@@ -55,7 +74,7 @@ readonly class Projects
      * names: string[],
      * icons: string[],
      * colors: string[]
-     * }>
+     * }> Liste formatée des projets.
      */
     public function getProjects(): array
     {

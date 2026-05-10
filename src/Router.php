@@ -41,6 +41,21 @@ class Router
     }
 
     /**
+     * Méthode qui affiche la page 404.
+     * @return void
+     */
+    private function render404(): void
+    {
+        http_response_code(404);
+        $title = "404 - Page Introuvable";
+        ob_start();
+        require_once ROOT . "/views/404.html";
+        $content = ob_get_clean();
+        require_once ROOT . "/views/layout.php";
+        exit;
+    }
+
+    /**
      * Méthode qui instancie le contrôleur associé et appelle la méthode associée dans le tableau des routes.
      * @return void
      */
@@ -64,9 +79,7 @@ class Router
             }
         }
 
-        http_response_code(404);
-        echo "404 Not Found";
-        exit;
+        $this->render404();
     }
 
 }

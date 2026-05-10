@@ -2,22 +2,36 @@
 
 namespace App\Controllers\Api;
 
+/**
+ * Class ContactController
+ * * Gère les requêtes API liées au formulaire de contact et à l'envoi d'emails via Brevo.
+ * * @package App\Controllers\Api
+ */
 class ContactController
 {
 
+    /**
+     * Point d'entrée pour la soumission du formulaire de contact.
+     * * Valide les données POST, vérifie le honeypot, et déclenche l'envoi
+     * du mail via l'API Brevo. Retourne une réponse JSON.
+     * * @return void
+     */
     public function handleContact()
     {
         if ($_SERVER["REQUEST_METHOD"] != "POST") {
             http_response_code(405);
-            header('HTTP/1.1 405 Method Not Allowed');
+            header("HTTP/1.1 405 Method Not Allowed");
         }
 
-        header('Content-Type: application/json; charset=utf-8');
-        if (!empty($_POST['honeypot'])) {
+        header("Content-Type: application/json; charset=utf-8");
+
+        // Protection contre les bots
+        if (!empty($_POST["honeypot"])) {
             echo json_encode(["success" => true, "message" => "Message envoyé (bot détecté)."]);
-            exit();
+            exit;
         }
 
+        // Nettoyage et validation des données
         $email   = filter_var(trim($_POST["email"] ?? ""), FILTER_VALIDATE_EMAIL);
         $name    = htmlspecialchars(trim($_POST["name"] ?? ""));
         $message = htmlspecialchars(trim($_POST["message"] ?? ""));
@@ -26,22 +40,30 @@ class ContactController
         if (!$email || empty($name) || empty($message)) {
             http_response_code(400);
             echo json_encode(["success" => false, "message" => "Données invalides ou manquantes."]);
-            exit();
+            exit;
         }
 
         $htmlBody = $this->getEmailTemplate($name, $email, $subject, $message);
         $result = $this->callBrevoApi($name, $email, $subject, $htmlBody);
 
-        if ($result['status'] >= 200 && $result['status'] < 300) {
+        if ($result["status"] >= 200 && $result["status"] < 300) {
             http_response_code(201);
-            echo json_encode(['success' => true, 'message' => 'Message envoyé !', 'author' => $name]);
+            echo json_encode(["success" => true, "message" => "Message envoyé !", "author" => $name]);
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => "Erreur lors de l'envoi"]);
+            echo json_encode(["success" => false, "message" => "Erreur lors de l'envoi"]);
         }
-        exit();
+        exit;
     }
 
+    /**
+     * Génère le template HTML de l'email.
+     * * @param string $name Nom de l'expéditeur.
+     * @param string $email Email de l'expéditeur.
+     * @param string $subject Objet du message.
+     * @param string $message Corps du message.
+     * @return string Le code HTML formaté.
+     */
     private function getEmailTemplate($name, $email, $subject, $message): string
     {
         return "
@@ -56,6 +78,14 @@ class ContactController
         ";
     }
 
+    /**
+     * Effectue l'appel cURL vers l'API SMTP de Brevo.
+     * * @param string $name Nom du client.
+     * @param string $email Email du client (utilisé pour le Reply-To).
+     * @param string $subject Objet du mail.
+     * @param string $htmlBody Contenu HTML du mail.
+     * @return array{'status': int, 'data': string|bool} Le code HTTP et la réponse brute.
+     */
     private function callBrevoApi($name, $email, $subject, $htmlBody): array
     {
         $data = [
@@ -69,9 +99,9 @@ class ContactController
         $ch = curl_init("https://api.brevo.com/v3/smtp/email");
         curl_setopt_array($ch, [
             CURLOPT_HTTPHEADER => [
-                'api-key: ' . $_ENV["BREVO_API_KEY"],
-                'Content-Type: application/json',
-                'Accept: application/json'
+                "api-key:" . $_ENV["BREVO_API_KEY"],
+                "Content-Type: application/json",
+                "Accept: application/json"
             ],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
@@ -81,7 +111,7 @@ class ContactController
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        return ['status' => $status, 'data' => $response];
+        return ["status" => $status, "data" => $response];
     }
 
 }

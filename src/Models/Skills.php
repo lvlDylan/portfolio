@@ -5,18 +5,34 @@ namespace App\Models;
 use App\Services\Database;
 use PDO;
 
+/**
+ * Class Skills
+ * * Gère la récupération et l'organisation des compétences techniques (stacks).
+ * Ce modèle combine les données issues de la base de données avec une configuration
+ * statique pour fournir un ensemble complet d'informations pour la vue.
+ * * @package App\Models
+ */
 readonly class Skills
 {
 
+    /**
+     * @var PDO|null Instance de connexion à la base de données.
+     */
     private ?PDO $database;
 
+    /**
+     * Skills constructor.
+     * * Initialise la connexion à la base de données via le Singleton Database.
+     */
     public function __construct()
     {
         $this->database = Database::getInstance();
     }
 
     /**
-     * Récupère les compétences groupées par catégorie.
+     * Récupère les compétences brutes groupées par catégorie depuis la base de données.
+     * * Utilise GROUP_CONCAT pour agréger les stacks afin de faciliter le groupement
+     * par catégorie (frontend, backend, etc.) directement via SQL.
      * * @return array<int, array{
      * category: string,
      * stack_names: string,
@@ -38,6 +54,15 @@ readonly class Skills
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
+    /**
+     * Fournit les métadonnées statiques (titres, descriptions, icônes de section)
+     * pour chaque catégorie de compétence.
+     * * @return array<string, array{
+     * title: string,
+     * desc: string,
+     * icon: string
+     * }> Configuration par clé de catégorie.
+     */
     private function getConfig(): array
     {
         return [
@@ -60,7 +85,10 @@ readonly class Skills
     }
 
     /**
-     * Formate les compétences pour la vue en fusionnant SQL et Configuration.
+     * Formate et fusionne les compétences pour la vue.
+     * * Cette méthode fait le lien entre les résultats SQL (stacks dynamiques)
+     * et la configuration statique (descriptions textuelles). Elle transforme
+     * également les chaînes concaténées en tableaux PHP.
      * * @return array<int, array{
      * title: string,
      * description: string,
@@ -69,7 +97,7 @@ readonly class Skills
      * names: string[],
      * colors: string[],
      * icons: string[]
-     * }>
+     * }> Liste structurée des compétences prête pour l'affichage.
      */
     public function getSkills(): array
     {
