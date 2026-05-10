@@ -18,6 +18,7 @@
 
 <main class="main-content mt-lg-3">
     <?= $content ?>
+    <?php require_once ROOT . "/views/partials/_modal.html"; ?>
     <?php require_once ROOT . "/views/partials/_footer.php"; ?>
 </main>
 
