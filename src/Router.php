@@ -17,8 +17,13 @@ class Router
     public function __construct()
     {
         $this->addRoute("GET", "/", "MainController", "render");
+
         $this->addRoute("GET", "/api/projects", "Api\ProjectController", "getProjects");
         $this->addRoute("GET", "/api/stacks", "Api\StackController", "getStacks");
+
+        $this->addRoute("POST", "/api/login", "Api\AuthController", "login");
+        $this->addRoute("POST", "/api/logout", "Api\AuthController", "logout");
+        $this->addRoute("POST", "/api/refresh", "Api\AuthController", "refresh");
 
         $this->addRoute("POST", "/api/contact", "Api\ContactController", "handleContact");
     }

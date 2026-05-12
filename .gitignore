@@ -21,6 +21,7 @@ public/assets/css/*.map
 .env.*.local
 portfolio_backup.sql
 remote_deploy_env.sh
+TODO
 
 # Avoid CV on GITHUB
 public/docs/CV-Dylan-Lavieille-2026-full.pdf
