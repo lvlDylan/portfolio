@@ -6,19 +6,36 @@ use App\Services\Database;
 use App\Services\Jwt;
 use PDO;
 
+/**
+ * Gestionnaire de l'authentification API.
+ *
+ * Assure la connexion, la déconnexion et le renouvellement des jetons JWT.
+ */
 class AuthController
 {
-
+    /**
+     * Instance de connexion à la base de données.
+     * @var PDO|null
+     */
     private ?PDO $database;
 
+    /**
+     * Initialise le contrôleur en récupérant l'instance Singleton de la base de données.
+     */
     public function __construct()
     {
         $this->database = Database::getInstance();
     }
 
+    /**
+     * Authentifie un utilisateur et génère une paire de jetons (access & refresh).
+     *
+     * @Route POST /api/login
+     * @return void
+     */
     public function login(): void
     {
-        header("Content-Type: application/json");
+        header("Content-Type: application/json; charset=utf-8");
 
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -49,14 +66,26 @@ class AuthController
         $accessToken = Jwt::generateToken((int) $result["id"], "access", 15 * 60);
         $refreshToken = Jwt::generateToken((int) $result["id"], "refresh", 7 * 24 * 60 * 60);
         Jwt::saveRefreshToken((int) $result["id"], 7 * 24 * 60 * 60, $refreshToken);
+
         http_response_code(200);
-        echo json_encode(["status" => "success", "access_token" => $accessToken, "refresh_token" => $refreshToken, "expires_in" => 15 * 60]);
+        echo json_encode([
+            "status" => "success",
+            "access_token" => $accessToken,
+            "refresh_token" => $refreshToken,
+            "expires_in" => 15 * 60
+        ]);
         exit;
     }
 
+    /**
+     * Invalide un jeton de rafraîchissement pour déconnecter l'utilisateur.
+     *
+     * @Route POST /api/logout
+     * @return void
+     */
     public function logout(): void
     {
-        header("Content-Type: application/json");
+        header("Content-Type: application/json; charset=utf-8");
 
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -67,13 +96,19 @@ class AuthController
             exit;
         }
 
-        Jwt::revokeRefreshToken((int) $data["refresh_token"]);
+        Jwt::revokeRefreshToken($data["refresh_token"]);
         http_response_code(204);
     }
 
+    /**
+     * Génère un nouveau access_token à partir d'un refresh_token valide.
+     *
+     * @Route POST /api/refresh
+     * @return void
+     */
     public function refresh(): void
     {
-        header("Content-Type: application/json");
+        header("Content-Type: application/json; charset=utf-8");
 
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -114,5 +149,4 @@ class AuthController
         ]);
         exit;
     }
-
 }

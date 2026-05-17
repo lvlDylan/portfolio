@@ -25,6 +25,9 @@ class Router
         $this->addRoute("POST", "/api/logout", "Api\AuthController", "logout");
         $this->addRoute("POST", "/api/refresh", "Api\AuthController", "refresh");
 
+        $this->addRoute("POST", "/api/projects", "Api\ProjectController", "createProject");
+        $this->addRoute("POST", "/api/projects/edit", "Api\ProjectController", "updateProject");
+
         $this->addRoute("POST", "/api/contact", "Api\ContactController", "handleContact");
     }
 

@@ -41,4 +41,17 @@ class StackModel
     {
         return $this->database->query("SELECT * FROM stacks")->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Recherche une stack en base de données par son nom.
+     *
+     * @param string $name Le nom de la stack à rechercher (ex: "java", "c").
+     * @return array|false Retourne les données de la stack sous forme de tableau associatif ou false si aucune stack ne correspond.
+     */
+    public function findByName(string $name): array | false
+    {
+        $stmt = $this->database->prepare("SELECT * FROM stacks WHERE name=:name");
+        $stmt->execute(["name" => $name]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

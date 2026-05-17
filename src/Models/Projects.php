@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Entities\ProjectEntity;
 use App\Services\Database;
 use PDO;
 
@@ -96,5 +97,18 @@ readonly class Projects
         }
 
         return $projects;
+    }
+
+    public function uploadProject(ProjectEntity $entity): bool
+    {
+        $sql = "INSERT INTO projects (title, description, description_shortened, image_full, github_link) VALUES (:title, :description, :description_shortened, :image_full, :github_link)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+           "title" => $entity->getTitle(),
+           "description" => $entity->getDescription(),
+           "description_shortened" => $entity->getDescriptionShortened(),
+           "image_full" => $entity->getImageUri(),
+           "github_link" => $entity->getGithubUrl()
+        ]);
     }
 }

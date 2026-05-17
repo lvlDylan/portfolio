@@ -4,8 +4,6 @@ namespace App\Services;
 
 
 use Firebase\JWT\Key;
-use Monolog\Logger;
-use Random\RandomException;
 
 /**
  * @var $config array - Configuration obtenue de bootstrap.php
@@ -49,13 +47,13 @@ class Jwt
         ]);
     }
 
-    public static function revokeRefreshToken(int $userId): void
+    public static function revokeRefreshToken(string $refreshToken): void
     {
         $database = Database::getInstance();
-        $sql = "UPDATE refresh_tokens SET is_revoked = 1 WHERE user_id = :user_id";
+        $sql = "UPDATE refresh_tokens SET is_revoked = 1 WHERE token_hash = :refresh_token";
         $stmt = $database->prepare($sql);
         $stmt->execute([
-            ":user_id" => $userId
+            ":refresh_token" => $refreshToken
         ]);
     }
 
