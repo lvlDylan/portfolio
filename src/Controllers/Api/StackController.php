@@ -36,6 +36,14 @@ class StackController
         exit;
     }
 
+    /**
+     * Crée une nouvelle stack technique en base de données.
+     *
+     * Récupère les données de la requête au format JSON, les valide, construit
+     * l'entité correspondante et tente de l'insérer via le modèle.
+     *
+     * @return void Retourne une réponse JSON (HTTP 201 ou 500) et interrompt l'exécution.
+     */
     public function createStack(): void {
         header("Content-Type: application/json; charset=utf-8");
         $stackModel = new StackModel();
@@ -53,11 +61,26 @@ class StackController
         exit;
     }
 
+    /**
+     * Modifie une stack technique existante en base de données.
+     *
+     * Récupère les données mises à jour en JSON, valide la structure et applique
+     * les modifications via le modèle.
+     *
+     * @return void Retourne une réponse JSON (HTTP 201 ou 500) et interrompt l'exécution.
+     */
     public function updateStack(): void {
         header("Content-Type: application/json; charset=utf-8");
         $stackModel = new StackModel();
         $data = $this->getJson();
-        $stack = $this->validateAndBuildEntity($data);
+
+        if (empty($data["id"])) {
+            http_response_code(400);
+            echo json_encode(["status" => "error", "message" => "Le champs d'id et de nom sont obligatoires"]);
+            exit;
+        }
+
+        $stack = $this->validateAndBuildEntity($data, $data["id"]);
 
         if ($stackModel->update($stack)) {
             http_response_code(201);
@@ -70,6 +93,13 @@ class StackController
         exit;
     }
 
+    /**
+     * Supprime une stack technique à partir de son identifiant.
+     *
+     * Extrait l'identifiant du JSON reçu et demande sa suppression au modèle.
+     *
+     * @return void Retourne un code HTTP 204 (Succès sans contenu) ou un JSON d'erreur (HTTP 400 ou 500).
+     */
     public function deleteStack(): void
     {
         header("Content-Type: application/json; charset=utf-8");
