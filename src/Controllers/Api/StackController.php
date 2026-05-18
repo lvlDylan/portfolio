@@ -52,10 +52,10 @@ class StackController
 
         if ($stackModel->insert($stack)) {
             http_response_code(201);
-            echo json_encode(["status" => "success", "message" => "La stack " . $stack->getName() . " a été ajoutée en base."]);
+            echo json_encode(["status" => "success", "message" => "La stack {$stack->getName()} a été ajoutée en base."]);
         } else {
             http_response_code(500);
-            echo json_encode(["status" => "error", "message" => "La stack " . $stack->getName() . " n'a pas été ajoutée en base suite à une erreur serveur."]);
+            echo json_encode(["status" => "error", "message" => "La stack {$stack->getName()} n'a pas été ajoutée en base suite à une erreur serveur."]);
         }
 
         exit;
@@ -84,10 +84,10 @@ class StackController
 
         if ($stackModel->update($stack)) {
             http_response_code(201);
-            echo json_encode(["status" => "success", "message" => "La stack " . $stack->getName() . " a été modifiée en base."]);
+            echo json_encode(["status" => "success", "message" => "La stack {$stack->getName()} a été modifiée en base."]);
         } else {
             http_response_code(500);
-            echo json_encode(["status" => "error", "message" => "La stack " . $stack->getName() . " n'a pas été modifiée en base suite à une erreur serveur."]);
+            echo json_encode(["status" => "error", "message" => "La stack {$stack->getName()} n'a pas été modifiée en base suite à une erreur serveur."]);
         }
 
         exit;

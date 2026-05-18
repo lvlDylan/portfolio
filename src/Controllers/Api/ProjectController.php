@@ -55,9 +55,9 @@ class ProjectController
 
         if ($projectModel->insert($project)) {
             http_response_code(201);
-            echo json_encode(["status" => "success", "message" => "Le projet " . $project->getTitle() . " a été ajouté en base."]);
+            echo json_encode(["status" => "success", "message" => "Le projet {$project->getTitle()} a été ajouté en base."]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Le projet " . $project->getTitle() . " n'a été ajouté en base suite à une erreur serveur."]);
+            echo json_encode(["status" => "error", "message" => "Le projet {$project->getTitle()} n'a pas été ajouté en base suite à une erreur serveur."]);
             http_response_code(500);
         }
 
@@ -88,9 +88,9 @@ class ProjectController
 
         if ($projectModel->update($project)) {
             http_response_code(201);
-            echo json_encode(["status" => "success", "message" => "Le projet " . $project->getTitle() . " a été modifié en base."]);
+            echo json_encode(["status" => "success", "message" => "Le projet {$project->getTitle()} a été modifié en base."]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Le projet " . $project->getTitle() . " n'a été modifié en base suite à une erreur serveur."]);
+            echo json_encode(["status" => "error", "message" => "Le projet {$project->getTitle()} n'a été modifié en base suite à une erreur serveur."]);
             http_response_code(500);
         }
 
@@ -159,7 +159,7 @@ class ProjectController
                 $stacks[] = new StackEntity($stack["id"], $stack["name"], $stack["category"], $stack["icon_name"], $stack["color_name"]);
             } else {
                 http_response_code(400);
-                echo json_encode(["status" => "error", "message" => "La stack " . $name . " n'existe pas."]);
+                echo json_encode(["status" => "error", "message" => "La stack {$name} n'existe pas."]);
                 exit;
             }
         }
