@@ -68,7 +68,6 @@ class Router
         require_once ROOT . "/views/404.html";
         $content = ob_get_clean();
         require_once ROOT . "/views/layout.php";
-        exit;
     }
 
     /**
@@ -85,21 +84,50 @@ class Router
         $method = $_SERVER['REQUEST_METHOD'];
 
         foreach ($this->routes as $route) {
-            if ($route["path"] === $uri && $route["method"] === $method) {
-                $controllerName = "App\\Controllers\\" . $route["controller"];
-                $action = $route["action"];
 
-                if (!empty($route["protected"])) {
-                    AuthMiddleware::accept();
+            if ($route["path"] === $uri) {
+                if ($method === $route["method"]) {
+                    $controllerName = "App\\Controllers\\" . $route["controller"];
+                    $action = $route["action"];
+
+                    if (!empty($route["protected"])) {
+                        AuthMiddleware::accept();
+                    }
+
+                    $controller = new $controllerName();
+                    $controller->$action();
+                } else {
+
+                    if (str_starts_with($uri, "/api/")) {
+                        header("Content-Type: application/json; charset=utf-8");
+                        http_response_code(405);
+                        echo json_encode([
+                            "status" => "error",
+                            "message" => "Méthode HTTP {$method} non autorisée pour cette action."
+                        ]);
+                    } else {
+                        header("HTTP/1.1 405 Method Not Allowed");
+                        http_response_code(405);
+                        echo "405 - Méthode non autorisée";
+                    }
                 }
 
-                $controller = new $controllerName();
-                $controller->$action();
-                return;
+                exit;
             }
         }
 
-        $this->render404();
+        if (str_starts_with($uri, "/api/")) {
+            header("Content-Type: application/json; charset=utf-8");
+            http_response_code(404);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Cette API n'existe pas."
+            ]);
+        } else {
+            $this->render404();
+        }
+
+        exit;
     }
 
 }
