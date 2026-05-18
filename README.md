@@ -1,6 +1,6 @@
 # Portfolio de Lavieille Dylan
 
-[![License](https://img.shields.io/github/license/lvlDylan/portfolio?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/github/license/lvlDylan/portfolio?style=flat-square&maxAge=0)](LICENSE)
 
 > **Bienvenue sur mon portfolio !** Ce projet regroupe mes travaux, mes compétences et mon parcours en tant que
 > développeur. Il sert de vitrine pour mes futures collaborations.
@@ -19,28 +19,33 @@ Je suis **Dylan Lavieille**, un développeur passionné.
 Ce portfolio a été conçu pour être performant, accessible et minimaliste afin de mettre en avant l'essentiel : mes
 projets.
 
+Ce projet a solicité l'aide de l'intelligence artificielle [Gemini](https://gemini.google.com/) pour la relecture de code et l'écriture de la documentation php.
+
 ### ✨ Fonctionnalités du site
 
 * **Design Responsive** : S'adapte parfaitement aux mobiles, tablettes et desktops.
 * **Mode Sombre/Clair** : Thème dynamique respectant les préférences système.
 * **Animations fluides** : Transitions douces pour une meilleure expérience utilisateur.
+* **API Sécurisée** : Endpoints CRUD protégés contre les accès non autorisés.
 
 ---
 
 ## 🛠️ Stack Technique
 
-**Langages & Frameworks :**
+**Back-end & Sécurité :**
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-W?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+
+**Front-end :**
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![Sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![NodeJS](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
 
 **Environnement & Outils :**
 ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=archlinux&logoColor=white)
 ![PhpStorm](https://img.shields.io/badge/PhpStorm-000000?style=for-the-badge&logo=phpstorm&logoColor=white)
-## 🛠️ Installation et Compilation SASS
 
 Ce projet est un site dynamique.
 
