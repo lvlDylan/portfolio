@@ -1,6 +1,8 @@
 <?php
 namespace App;
 
+use App\Middlewares\AuthMiddleware;
+
 /**
  * Gère le routage de l'application.
  * Analyse la méthode et l'url et appelle la méthode correspondante dans le contrôleur associé.
@@ -8,7 +10,7 @@ namespace App;
 class Router
 {
     /**
-     * @var array<int, array{method: string, path: string, controller: string, action: string}>
+     * @var array<int, array{method: string, path: string, controller: string, action: string, protected: bool}>
      *     Liste des routes enregistrées.
      */
     private array $routes = [];
@@ -18,17 +20,22 @@ class Router
     {
         $this->addRoute("GET", "/", "MainController", "render");
 
-        $this->addRoute("GET", "/api/projects", "Api\ProjectController", "getProjects");
-        $this->addRoute("GET", "/api/stacks", "Api\StackController", "getStacks");
+        $this->addRoute("GET", "/api/projects", "Api\ProjectController", "getProjects", false);
+        $this->addRoute("GET", "/api/stacks", "Api\StackController", "getStacks", false);
 
-        $this->addRoute("POST", "/api/login", "Api\AuthController", "login");
+        $this->addRoute("POST", "/api/login", "Api\AuthController", "login", false);
         $this->addRoute("POST", "/api/logout", "Api\AuthController", "logout");
         $this->addRoute("POST", "/api/refresh", "Api\AuthController", "refresh");
 
         $this->addRoute("POST", "/api/projects", "Api\ProjectController", "createProject");
         $this->addRoute("POST", "/api/projects/edit", "Api\ProjectController", "updateProject");
+        $this->addRoute("DELETE", "/api/projects/delete", "Api\ProjectController", "deleteProject");
 
-        $this->addRoute("POST", "/api/contact", "Api\ContactController", "handleContact");
+        $this->addRoute("POST", "/api/stacks", "Api\StackController", "createStack");
+        $this->addRoute("POST", "/api/stacks/edit", "Api\StackController", "updateStack");
+        $this->addRoute("DELETE", "/api/stacks/delete", "Api\StackController", "deleteStack");
+
+        $this->addRoute("POST", "/api/contact", "Api\ContactController", "handleContact", false);
     }
 
     /**
@@ -38,13 +45,14 @@ class Router
      * @param string $action Le nom de la méthode à appeler
      * @return void
      */
-    private function addRoute(string $method, string $path, string $controller, string $action): void
+    private function addRoute(string $method, string $path, string $controller, string $action, bool $protected = true): void
     {
         $this->routes[] = [
             "method" => $method,
             "path" => $path,
             "controller" => $controller,
-            "action" => $action
+            "action" => $action,
+            "protected" => $protected
         ];
     }
 
@@ -80,6 +88,10 @@ class Router
             if ($route["path"] === $uri && $route["method"] === $method) {
                 $controllerName = "App\\Controllers\\" . $route["controller"];
                 $action = $route["action"];
+
+                if (!empty($route["protected"])) {
+                    AuthMiddleware::accept();
+                }
 
                 $controller = new $controllerName();
                 $controller->$action();
