@@ -133,4 +133,37 @@ class ProjectModel
         $this->database->commit();
         return true;
     }
+
+    /**
+     * Supprime le projet définit par l'id en base.
+     * * Cette méthode utilise une transaction SQL pour garantir la cohérence des données.
+     * @param int $id L'identifiant en base du projet.
+     * @return bool True si la suppression du projet a réussi, false sinon.
+     */
+    public function delete(int $id): bool
+    {
+        $stacksSql = "DELETE FROM project_stacks WHERE project_id=:project_id";
+        $projectSql = "DELETE FROM projects WHERE id=:project_id";
+
+        $this->database->beginTransaction();
+
+        $stackStmt = $this->database->prepare($stacksSql);
+        $stackResult = $stackStmt->execute(["project_id" => $id]);
+
+        if (!$stackResult) {
+            $this->database->rollBack();
+            return false;
+        }
+
+        $projectStmt = $this->database->prepare($projectSql);
+        $projectResult = $projectStmt->execute(["project_id" => $id]);
+
+        if (!$projectResult) {
+            $this->database->rollBack();
+            return false;
+        }
+
+        $this->database->commit();
+        return true;
+    }
 }

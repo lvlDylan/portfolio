@@ -28,7 +28,6 @@ class ProjectController
 
         // Définition des en-têtes HTTP
         header("Content-Type: application/json; charset=utf-8");
-        header("Access-Control-Allow-Origin: *");
 
         echo json_encode([
             "status" => "success",
@@ -57,11 +56,12 @@ class ProjectController
         if ($projectModel->insert($project)) {
             http_response_code(201);
             echo json_encode(["status" => "success", "message" => "Le projet " . $project->getTitle() . " a été ajouté en base."]);
-            exit;
         } else {
             echo json_encode(["status" => "error", "message" => "Le projet " . $project->getTitle() . " n'a été ajouté en base suite à une erreur serveur."]);
             http_response_code(500);
         }
+
+        exit;
     }
 
     /**
@@ -89,11 +89,38 @@ class ProjectController
         if ($projectModel->update($project)) {
             http_response_code(201);
             echo json_encode(["status" => "success", "message" => "Le projet " . $project->getTitle() . " a été modifié en base."]);
-            exit;
         } else {
             echo json_encode(["status" => "error", "message" => "Le projet " . $project->getTitle() . " n'a été modifié en base suite à une erreur serveur."]);
             http_response_code(500);
         }
+
+        exit;
+    }
+
+    /**
+     * Traite la requête de suppression d'un projet existant.
+     * * Cette méthode s'assure de la présence de l'identifiant unique du projet.
+     * @return void Interrompt l'exécution après l'envoi de la réponse JSON (204, 400 ou 500).
+     */
+    public function deleteProject(): void
+    {
+        header("Content-Type: application/json; charset=utf-8");
+        $projectModel = new ProjectModel();
+        $data = $this->getJson();
+        if (empty($data["id"])) {
+            http_response_code(400);
+            echo json_encode(["status" => "error", "message" => "Le champ d'identifiant est obligatoire."]);
+            exit;
+        }
+
+        if ($projectModel->delete($data["id"])) {
+            http_response_code(204);
+        } else {
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Le projet n'a pas été supprimé suite à une erreur serveur."]);
+        }
+
+        exit;
     }
 
     /**
