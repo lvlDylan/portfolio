@@ -6,10 +6,8 @@ use App\Services\Jwt;
 
 class AuthMiddleware
 {
-    public static function accept()
+    public static function accept(): void
     {
-
-
         header("Content-Type: application/json; charset=utf-8");
         $headers = getallheaders();
         if (!array_key_exists("Authorization", $headers) && !array_key_exists("authorization", $headers)) {
