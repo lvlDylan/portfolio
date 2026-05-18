@@ -9,14 +9,14 @@ class AuthMiddleware
     public static function accept(): void
     {
         header("Content-Type: application/json; charset=utf-8");
-        $headers = getallheaders();
-        if (!array_key_exists("Authorization", $headers) && !array_key_exists("authorization", $headers)) {
+
+        $authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? null;
+
+        if (empty($authorization)) {
             http_response_code(401);
             echo json_encode(["status" => "error", "message" => "Autorisation invalide."]);
             exit;
         }
-
-        $authorization = $headers["Authorization"] ?? $headers["authorization"];
 
         if (!str_starts_with($authorization, "Bearer ")) {
             http_response_code(401);
