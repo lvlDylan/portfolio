@@ -2,6 +2,8 @@
 
 namespace App\Controllers\Api;
 
+use App\Services\Email;
+
 /**
  * Class ContactController
  * * Gère les requêtes API liées au formulaire de contact et à l'envoi d'emails via Brevo.
@@ -18,11 +20,6 @@ class ContactController
      */
     public function handleContact()
     {
-        if ($_SERVER["REQUEST_METHOD"] != "POST") {
-            http_response_code(405);
-            header("HTTP/1.1 405 Method Not Allowed");
-        }
-
         header("Content-Type: application/json; charset=utf-8");
 
         // Protection contre les bots
@@ -43,8 +40,8 @@ class ContactController
             exit;
         }
 
-        $htmlBody = $this->getEmailTemplate($name, $email, $subject, $message);
-        $result = $this->callBrevoApi($name, $email, $subject, $htmlBody);
+        $result = Email::sendEmail($name, $email, $subject, $message);
+
 
         if ($result["status"] >= 200 && $result["status"] < 300) {
             http_response_code(201);
@@ -55,63 +52,4 @@ class ContactController
         }
         exit;
     }
-
-    /**
-     * Génère le template HTML de l'email.
-     * * @param string $name Nom de l'expéditeur.
-     * @param string $email Email de l'expéditeur.
-     * @param string $subject Objet du message.
-     * @param string $message Corps du message.
-     * @return string Le code HTML formaté.
-     */
-    private function getEmailTemplate($name, $email, $subject, $message): string
-    {
-        return "
-        <div style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;'>
-            <h2 style='color: #4338ca; border-bottom: 2px solid #4338ca;'>Nouveau message - Portfolio</h2>
-            <p><strong>Expéditeur :</strong> {$name} ({$email})</p>
-            <p><strong>Objet :</strong> {$subject}</p>
-            <div style='background-color: #f8f9fa; padding: 15px; border-left: 4px solid #4338ca; margin-top: 20px;'>
-                " . nl2br($message) . "
-            </div>
-        </div>
-        ";
-    }
-
-    /**
-     * Effectue l'appel cURL vers l'API SMTP de Brevo.
-     * * @param string $name Nom du client.
-     * @param string $email Email du client (utilisé pour le Reply-To).
-     * @param string $subject Objet du mail.
-     * @param string $htmlBody Contenu HTML du mail.
-     * @return array{'status': int, 'data': string|bool} Le code HTTP et la réponse brute.
-     */
-    private function callBrevoApi($name, $email, $subject, $htmlBody): array
-    {
-        $data = [
-            "sender" => ["name" => "Portfolio Contact", "email" => $_ENV["BREVO_EMAIL_VERIFIED"]],
-            "to" => [["email" => $_ENV["ADMIN_EMAIL"], "name" => "Moi"]],
-            "replyTo" => ["email" => $email, "name" => $name],
-            "subject" => "Contact Portfolio : " . $subject,
-            "htmlContent" => $htmlBody
-        ];
-
-        $ch = curl_init("https://api.brevo.com/v3/smtp/email");
-        curl_setopt_array($ch, [
-            CURLOPT_HTTPHEADER => [
-                "api-key:" . $_ENV["BREVO_API_KEY"],
-                "Content-Type: application/json",
-                "Accept: application/json"
-            ],
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode($data)
-        ]);
-
-        $response = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        return ["status" => $status, "data" => $response];
-    }
-
 }
