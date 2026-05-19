@@ -139,10 +139,14 @@ class StackModel
     public function delete(int $id): void
     {
         try {
+            $this->database->beginTransaction();
             $sql = "DELETE FROM stacks WHERE id=:id";
             $stmt = $this->database->prepare($sql);
             $stmt->execute(["id" => $id]);
         } catch (PDOException $e) {
+            if ($this->database->inTransaction()) {
+                $this->database->rollBack();
+            }
             throw StackException::deleteFailed($id, $e);
         }
     }
