@@ -12,6 +12,7 @@ $dotenv->load();
 
 date_default_timezone_set("Europe/Paris");
 
+
 /**
  * Si APP_ENV dans le .env est en development, afficher les erreurs.
  */
@@ -21,4 +22,9 @@ if ($_ENV["APP_ENV"] == "development") {
 
     $logger = new Logger("portfolio");
     $logger->pushHandler(new StreamHandler(ROOT . "/logs/" . date("Y-m-d") . ".log", Level::Debug));
+} else if ($_ENV["APP_ENV"] == "production") {
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', '0');
+    ini_set('log_errors', 1);
+    ini_set('error_log', ROOT . '/logs/php_errors.log');
 }
