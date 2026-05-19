@@ -23,6 +23,7 @@ class StackException extends Exception
     {
         return new self("Les stacks n'ont pas pu être récupérer.", 200, $previous);
     }
+
     /**
      * Leve une exception lorsque l'association des stacks à un projet échoue.
      *
@@ -31,7 +32,7 @@ class StackException extends Exception
      */
     public static function insertFailed(string $stackName, ?Throwable $previous = null): StackException
     {
-        return new self("La stack {$stackName} pas pu être insérées.", 201, $previous);
+        return new self("La stack {$stackName} pas pu être insérées.", 202, $previous);
     }
 
     /**
@@ -43,7 +44,7 @@ class StackException extends Exception
      */
     public static function updateFailed(string $stackName, ?Throwable $previous = null): StackException
     {
-        return new self("La stack '{$stackName}' n'a pas pu être modifiées.", 202, $previous);
+        return new self("La stack '{$stackName}' n'a pas pu être modifiées.", 203, $previous);
     }
 
     /**
@@ -55,7 +56,7 @@ class StackException extends Exception
      */
     public static function deleteFailed(int $stackId, ?Throwable $previous = null): StackException
     {
-        return new self("Impossible de supprimer la stack n°{$stackId}.", 203, $previous);
+        return new self("Impossible de supprimer la stack n°{$stackId}.", 204, $previous);
     }
 
     /**
@@ -67,6 +68,6 @@ class StackException extends Exception
      */
     public static function associateFailed(string $projectTitle, ?Throwable $previous = null): StackException
     {
-        return new self("Les stacks du projet '{$projectTitle}' n'ont pas pu être insérées.", 204, $previous);
+        return new self("Les stacks du projet '{$projectTitle}' n'ont pas pu être insérées.", 205, $previous);
     }
 }

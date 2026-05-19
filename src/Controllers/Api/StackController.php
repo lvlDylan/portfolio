@@ -2,6 +2,8 @@
 
 namespace App\Controllers\Api;
 
+use App\Exceptions\Format\ValidException;
+use App\Exceptions\StackException;
 use App\Models\Api\StackModel;
 use App\Models\Entities\StackEntity;
 
@@ -22,18 +24,21 @@ class StackController
      */
     public function getStacks(): void {
         $model = new StackModel();
-        $stacks = $model->findAll();
-
-        // Définition des en-têtes HTTP
         header("Content-Type: application/json; charset=utf-8");
 
-        echo json_encode([
-            "status" => "success",
-            "count" => count($stacks),
-            "data" => $stacks
-        ]);
-
-        exit;
+        try {
+            $stacks = $model->findAll();
+            echo json_encode([
+                "status" => "success",
+                "count" => count($stacks),
+                "data" => $stacks
+            ]);
+        } catch (StackException $e) {
+            echo json_encode([
+                "status" => "error",
+                "count" => 0,
+            ]);
+        }
     }
 
     /**
@@ -47,18 +52,21 @@ class StackController
     public function createStack(): void {
         header("Content-Type: application/json; charset=utf-8");
         $stackModel = new StackModel();
-        $data = $this->getJson();
-        $stack = $this->validateAndBuildEntity($data);
 
-        if ($stackModel->insert($stack)) {
+        try {
+            $data = $this->getJson();
+            $stack = $this->validateAndBuildEntity($data);
+            $stackModel->insert($stack);
+
             http_response_code(201);
             echo json_encode(["status" => "success", "message" => "La stack {$stack->getName()} a été ajoutée en base."]);
-        } else {
+        } catch (ValidException $e) {
+            http_response_code(400);
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        } catch (StackException $e) {
             http_response_code(500);
-            echo json_encode(["status" => "error", "message" => "La stack {$stack->getName()} n'a pas été ajoutée en base suite à une erreur serveur."]);
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         }
-
-        exit;
     }
 
     /**
@@ -72,25 +80,28 @@ class StackController
     public function updateStack(): void {
         header("Content-Type: application/json; charset=utf-8");
         $stackModel = new StackModel();
-        $data = $this->getJson();
 
-        if (empty($data["id"])) {
-            http_response_code(400);
-            echo json_encode(["status" => "error", "message" => "Le champs d'id et de nom sont obligatoires"]);
-            exit;
-        }
+        try {
+            $data = $this->getJson();
 
-        $stack = $this->validateAndBuildEntity($data, $data["id"]);
+            if (empty($data["id"])) {
+                http_response_code(400);
+                echo json_encode(["status" => "error", "message" => "Le champs d'id et de nom sont obligatoires"]);
+                exit;
+            }
 
-        if ($stackModel->update($stack)) {
-            http_response_code(201);
+            $stack = $this->validateAndBuildEntity($data, $data["id"]);
+            $stackModel->update($stack);
+
+            http_response_code(200);
             echo json_encode(["status" => "success", "message" => "La stack {$stack->getName()} a été modifiée en base."]);
-        } else {
+        } catch (ValidException $e) {
+            http_response_code(400);
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        } catch (StackException $e) {
             http_response_code(500);
-            echo json_encode(["status" => "error", "message" => "La stack {$stack->getName()} n'a pas été modifiée en base suite à une erreur serveur."]);
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         }
-
-        exit;
     }
 
     /**
@@ -104,21 +115,24 @@ class StackController
     {
         header("Content-Type: application/json; charset=utf-8");
         $stackModel = new StackModel();
-        $data = $this->getJson();
-        if (empty($data["id"])) {
-            http_response_code(400);
-            echo json_encode(["status" => "error", "message" => "Le champ d'identifiant est obligatoire."]);
-            exit;
-        }
 
-        if ($stackModel->delete($data["id"])) {
+        try {
+            $data = $this->getJson();
+            if (empty($data["id"])) {
+                http_response_code(400);
+                echo json_encode(["status" => "error", "message" => "Le champs d'id et de nom sont obligatoires"]);
+                exit;
+            }
+            $stackModel->delete($data["id"]);
             http_response_code(204);
-        } else {
+        } catch (ValidException $e) {
+            http_response_code(400);
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        } catch (StackException $e) {
             http_response_code(500);
-            echo json_encode(["status" => "error", "message" => "La stack n'a pas été supprimée suite à une erreur serveur."]);
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         }
 
-        exit;
     }
 
     /**
@@ -128,6 +142,7 @@ class StackController
      * @param array $data Le tableau associatif contenant les données de la stack.
      * @param int $id L'identifiant de la stack (-1 par défaut s'il s'agit d'une création).
      * @return StackEntity L'instance de la stack validée et configurée.²
+     * @throws ValidException Levée lorsque le format de data est invalide.
      */
     private function validateAndBuildEntity(array $data, int $id = -1): StackEntity
     {
@@ -135,9 +150,7 @@ class StackController
 
 
         if (empty($data["name"]) || empty($data["category"])) {
-            http_response_code(400);
-            echo json_encode(["status" => "error", "message" => "Les champs de nom et catégories sont obligatoires"]);
-            exit;
+            throw new ValidException("Les champs de nom et catégories sont obligatoires");
         }
 
         if (empty($data["iconName"])) {
@@ -156,15 +169,14 @@ class StackController
      * Extrait, décode et valide le flux JSON reçu dans le corps de la requête HTTP.
      *
      * @return array<string, mixed> Le tableau associatif représentant les données JSON décodées.
+     * @throws ValidException Levée lorsque le JSON est invalide.
      */
     private function getJson(): array
     {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
         if (!$data) {
-            http_response_code(400);
-            echo json_encode(["status" => "error", "message" => "JSON invalide."]);
-            exit;
+            throw new ValidException("JSON invalide.");
         }
         return $data;
     }

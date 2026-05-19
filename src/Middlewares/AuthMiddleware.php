@@ -2,6 +2,8 @@
 
 namespace App\Middlewares;
 
+use App\Exceptions\Auth\AuthException;
+use App\Exceptions\Auth\ForbiddenException;
 use App\Services\Jwt;
 
 /**
@@ -30,6 +32,8 @@ class AuthMiddleware
      *                     ou si le jeton JWT est invalide/expiré.
      * @response 403 JSON Retourné si l'utilisateur est authentifié mais que son `uid`
      *                     n'est pas présent dans la variable d'environnement `$_ENV["AUTHORIZATION"]`.
+     * @throws AuthException Si le token est manquant, mal formatté, ou expiré.
+     * @throws ForbiddenException Si l'utilisateur n'a pas les droits requis.
      */
     public static function accept(): void
     {
@@ -38,33 +42,27 @@ class AuthMiddleware
         $authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? null;
 
         if (empty($authorization)) {
-            http_response_code(401);
-            echo json_encode(["status" => "error", "message" => "Autorisation invalide."]);
-            exit;
+            throw new AuthException("Autorisation invalide.");
         }
 
         if (!str_starts_with($authorization, "Bearer ")) {
-            http_response_code(401);
-            echo json_encode(["status" => "error", "message" => "Autorisation invalide."]);
-            exit;
+            throw new AuthException("Autorisation invalide.");
         }
 
         $authorization = substr($authorization, 7);
         $decoded = Jwt::decodeAccessToken($authorization);
 
         if (!$decoded || !isset($decoded->uid)) {
-            http_response_code(401);
-            echo json_encode(["status" => "error", "message" => "Autorisation invalide."]);
-            exit;
+            throw new AuthException("Autorisation invalide ou expirée.");
         }
 
         $authorized_ids = explode(",", $_ENV["AUTHORIZATION"] ?? "");
 
         if (!in_array($decoded->uid, $authorized_ids)) {
-            http_response_code(403);
-            echo json_encode(["status" => "error", "message" => "Accès refusé."]);
-            exit;
+           throw new ForbiddenException("Accès refusé.");
         }
+
+        $_REQUEST["USER_ID"] = $decoded->uid;
     }
 
 }

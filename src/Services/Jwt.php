@@ -66,4 +66,29 @@ class Jwt
             return null;
         }
     }
+
+    public static function isValidRefreshToken(string $refreshToken): array
+    {
+        $database = Database::getInstance();
+        $sql = "SELECT user_id FROM refresh_tokens WHERE token_hash = :refresh_token AND is_revoked = 0 AND expires_at > :now";
+        $stmt = $database->prepare($sql);
+        $stmt->execute([
+            "refresh_token" => $refreshToken,
+            "now" => date('Y-m-d H:i:s', time())
+        ]);
+
+        $result = $stmt->fetch();
+
+        if ($result) {
+            return [
+                "user_id" => $result["user_id"],
+                "isValid" => true,
+            ];
+        } else {
+            return [
+                "user_id" => -1,
+                "isValid" => false,
+            ];
+        }
+    }
 }

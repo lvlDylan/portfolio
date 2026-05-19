@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Exceptions\ProjectException;
+use App\Exceptions\SkillsException;
 use App\Models\Projects;
 use App\Models\Skills;
 
@@ -26,12 +28,22 @@ class MainController
         $skillsModel = new Skills();
         $projectModel = new Projects();
 
-        $skills = $skillsModel->getSkills();
-        $projects = $projectModel->getProjects();
+        try {
+            $skills = $skillsModel->getSkills();
+            $projects = $projectModel->getProjects();
 
-        ob_start();
-        require_once ROOT . "/views/main.php";
-        $content = ob_get_clean();
-        require_once ROOT . "/views/layout.php";
+            ob_start();
+            require_once ROOT . "/views/main.php";
+            $content = ob_get_clean();
+            require_once ROOT . "/views/layout.php";
+        } catch (ProjectException|SkillsException $e) {
+            http_response_code(500);
+            $title = "500 - Server Internal Error";
+            ob_start();
+            require_once ROOT . "/views/500.html";
+            $content = ob_get_clean();
+            require_once ROOT . "/views/layout.php";
+        }
+
     }
 }

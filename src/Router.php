@@ -1,6 +1,9 @@
 <?php
 namespace App;
 
+use App\Exceptions\Auth\AuthException;
+use App\Exceptions\Auth\ForbiddenException;
+
 use App\Middlewares\AuthMiddleware;
 
 /**
@@ -18,7 +21,7 @@ class Router
 
     public function __construct()
     {
-        $this->addRoute("GET", "/", "MainController", "render");
+        $this->addRoute("GET", "/", "MainController", "render", false);
 
         $this->addRoute("GET", "/api/projects", "Api\ProjectController", "getProjects", false);
         $this->addRoute("GET", "/api/stacks", "Api\StackController", "getStacks", false);
@@ -70,6 +73,16 @@ class Router
         require_once ROOT . "/views/layout.php";
     }
 
+    private function render500(): void
+    {
+        http_response_code(500);
+        $title = "500 - Server Internal Error";
+        ob_start();
+        require_once ROOT . "/views/500.html";
+        $content = ob_get_clean();
+        require_once ROOT . "/views/layout.php";
+    }
+
     /**
      * Méthode qui instancie le contrôleur associé et appelle la méthode associée dans le tableau des routes.
      * @return void
@@ -91,11 +104,27 @@ class Router
                     $action = $route["action"];
 
                     if (!empty($route["protected"])) {
-                        AuthMiddleware::accept();
+
+                        try {
+                            AuthMiddleware::accept();
+                        } catch (AuthException $e) {
+                            http_response_code(401);
+                            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+                        } catch (ForbiddenException $e) {
+                            http_response_code(403);
+                            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+                        }
+
                     }
 
                     $controller = new $controllerName();
-                    $controller->$action();
+
+                    try {
+                        $controller->$action();
+                    } catch (\PDOException $e) {
+                        $this->render500();
+                    }
+
                 } else {
 
                     if (str_starts_with($uri, "/api/")) {

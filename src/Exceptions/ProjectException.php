@@ -20,7 +20,7 @@ class ProjectException extends Exception
      */
     public static function fetchFailed(?Throwable $previous = null): ProjectException
     {
-        return new self("Les projets n'ont pas pu être récupérer.", 200, $previous);
+        return new self("Les projets n'ont pas pu être récupérer.", 100, $previous);
     }
 
     /**
