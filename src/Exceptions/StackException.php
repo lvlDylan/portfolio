@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use App\Models\Entities\StackEntity;
 use Exception;
 use Throwable;
 

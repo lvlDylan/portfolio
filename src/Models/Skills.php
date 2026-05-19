@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Exceptions\SkillsException;
+use App\Exceptions\StackException;
 use App\Services\Database;
 use PDO;
+use PDOException;
 
 /**
  * Class Skills
@@ -39,10 +42,12 @@ readonly class Skills
      * stack_colors: string,
      * stack_icons: string
      * }> Liste des catégories avec leurs stacks concaténées.
+     * @throws SkillsException Levée si la récupération des compétences échoue.
      */
     private function findAll(): array
     {
-        $sql = "SELECT 
+        try {
+            $sql = "SELECT 
                 category, 
                 GROUP_CONCAT(name ORDER BY id SEPARATOR ',') AS stack_names,
                 GROUP_CONCAT(color_name ORDER BY id SEPARATOR ',') AS stack_colors,
@@ -50,8 +55,12 @@ readonly class Skills
                 FROM stacks 
                 GROUP BY category 
                 ORDER BY FIELD(category, 'frontend', 'backend', 'software-sys');";
-        $stmt = $this->database->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            $stmt = $this->database->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new SkillsException("Erreur lors de la récupération des compétences", 0, $e);
+        }
+
     }
 
     /**
@@ -98,6 +107,7 @@ readonly class Skills
      * colors: string[],
      * icons: string[]
      * }> Liste structurée des compétences prête pour l'affichage.
+     * @throws SkillsException Levée si la récupération des compétences échoue.
      */
     public function getSkills(): array
     {

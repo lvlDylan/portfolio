@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Exceptions\ProjectException;
 use App\Models\Entities\ProjectEntity;
 use App\Services\Database;
 use PDO;
+use PDOException;
 
 /**
  * Class Projects
@@ -18,7 +20,7 @@ readonly class Projects
     /**
      * @var PDO Instance de connexion à la base de données.
      */
-    private PDO $db;
+    private PDO $database;
 
     /**
      * Projects constructor.
@@ -26,7 +28,7 @@ readonly class Projects
      */
     public function __construct()
     {
-        $this->db = Database::getInstance();
+        $this->database = Database::getInstance();
     }
 
     /**
@@ -44,10 +46,12 @@ readonly class Projects
      * stack_icons: ?string,
      * stack_colors: ?string
      * }> Liste brute issue de la base de données.
+     * @throws ProjectException Levée si la récupération des projets échoue.
      */
     private function findAll(): array
     {
-        $sql = "SELECT p.id, p.title, p.description, 
+        try {
+            $sql = "SELECT p.id, p.title, p.description, 
                 p.github_link, p.description_shortened, p.image_full,
                 GROUP_CONCAT(s.name ORDER BY s.id SEPARATOR ',') AS stack_names,
                 GROUP_CONCAT(s.icon_name ORDER BY s.id SEPARATOR ',') AS stack_icons,
@@ -57,8 +61,11 @@ readonly class Projects
                 LEFT JOIN stacks s ON ps.stack_id = s.id
                 GROUP BY p.id
                 ORDER BY p.id DESC;";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            $stmt = $this->database->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw ProjectException::fetchFailed($e);
+        }
     }
 
     /**
@@ -76,10 +83,12 @@ readonly class Projects
      * icons: string[],
      * colors: string[]
      * }> Liste formatée des projets.
-     */
+     * @throws ProjectException Levée si la récupération des projets échoue.
+     * */
     public function getProjects(): array
     {
         $projects = [];
+
         $rawProjects = $this->findAll();
 
         foreach ($rawProjects as $row) {
@@ -97,18 +106,5 @@ readonly class Projects
         }
 
         return $projects;
-    }
-
-    public function uploadProject(ProjectEntity $entity): bool
-    {
-        $sql = "INSERT INTO projects (title, description, description_shortened, image_full, github_link) VALUES (:title, :description, :description_shortened, :image_full, :github_link)";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
-           "title" => $entity->getTitle(),
-           "description" => $entity->getDescription(),
-           "description_shortened" => $entity->getDescriptionShortened(),
-           "image_full" => $entity->getImageUri(),
-           "github_link" => $entity->getGithubUrl()
-        ]);
     }
 }
