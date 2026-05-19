@@ -2,9 +2,13 @@
 
 namespace App\Models\Api;
 
+use App\Exceptions\ProjectException;
+use App\Exceptions\StackException;
 use App\Models\Entities\ProjectEntity;
 use App\Services\Database;
+use Exception;
 use PDO;
+use PDOException;
 
 /**
  * Class ProjectModel
@@ -38,11 +42,16 @@ class ProjectModel
      * image_path: string,
      * github_link: string,
      * created_at: string
-     * }>|false Retourne un tableau associatif des projets ou false en cas d'échec.
+     * }> Retourne un tableau associatif des projets.
+     * @throws ProjectException
      */
-    public function findAll(): array|false
+    public function findAll(): array
     {
-        return $this->database->query("SELECT * FROM projects")->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            return $this->database->query("SELECT * FROM projects")->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw ProjectException::fetchFailed($e);
+        }
     }
 
     /**
@@ -52,118 +61,134 @@ class ProjectModel
      * ou d'une de ses stacks échoue, rien ne soit enregistré en base de données.
      *
      * @param ProjectEntity $projectEntity L'entité du projet à insérer.
-     * @return bool True si le projet et toutes ses stacks ont été insérés avec succès, false sinon.
+     * @throws ProjectException Lancée si l'insertion du projet échoue.
+     * @throws StackException Lancée si l'insertion des stacks du projet échouent.
+     * @throws Exception
      */
-    public function insert(ProjectEntity $projectEntity): bool
+    public function insert(ProjectEntity $projectEntity): void
     {
-        $sql = "INSERT INTO projects (title, description, description_shortened, image_full, github_link) VALUES (:title, :description, :description_shortened, :image_full, :github_link)";
 
-        $this->database->beginTransaction();
+        try {
+            $this->database->beginTransaction();
 
-        $stmt = $this->database->prepare($sql);
-        $result = $stmt->execute([
-            "title" => $projectEntity->getTitle(),
-            "description" => $projectEntity->getDescription(),
-            "description_shortened" => $projectEntity->getDescriptionShortened(),
-            "image_full" => $projectEntity->getImageUri(),
-            "github_link" => $projectEntity->getGithubUrl()
-        ]);
+            try {
+                $sql = "INSERT INTO projects (title, description, description_shortened, image_full, github_link) VALUES (:title, :description, :description_shortened, :image_full, :github_link)";
+                $stmt = $this->database->prepare($sql);
+                $stmt->execute([
+                    "title" => $projectEntity->getTitle(),
+                    "description" => $projectEntity->getDescription(),
+                    "description_shortened" => $projectEntity->getDescriptionShortened(),
+                    "image_full" => $projectEntity->getImageUri(),
+                    "github_link" => $projectEntity->getGithubUrl()
+                ]);
 
-        if (!$result) {
-            $this->database->rollBack();
-            return false;
-        }
-
-        $id = $this->database->lastInsertId();
-        $stmtStack = $this->database->prepare("INSERT INTO project_stacks (project_id, stack_id) VALUES (:project_id, :stack_id)");
-        foreach ($projectEntity->getStacks() as $stack) {
-            $stackResult = $stmtStack->execute(["project_id" => $id, "stack_id" => $stack->getId()]);
-            if (!$stackResult) {
-                $this->database->rollBack();
-                return false;
+                $id = $this->database->lastInsertId();
+            } catch (PDOException ) {
+                throw ProjectException::insertFailed($projectEntity->getTitle(), $e);
             }
-        }
 
-        $this->database->commit();
-        return true;
+            try {
+                $stmtStack = $this->database->prepare("INSERT INTO project_stacks (project_id, stack_id) VALUES (:project_id, :stack_id)");
+
+                foreach ($projectEntity->getStacks() as $stack) {
+                    $stmtStack->execute(["project_id" => $id, "stack_id" => $stack->getId()]);
+                }
+            } catch (PDOException $e) {
+                throw StackException::associateFailed($projectEntity->getTitle(), $e);
+            }
+
+            $this->database->commit();
+
+        } catch (Exception $e) {
+            if ($this->database->inTransaction()) {
+                $this->database->rollBack();
+            }
+
+            throw $e;
+        }
     }
 
     /**
      * Met à jour un projet existant ainsi que ses liaisons avec les stacks techniques.
-     * * Cette méthode utilise une transaction SQL pour garantir la cohérence des données.
+     *
+     * Cette méthode utilise une transaction SQL pour garantir la cohérence des données.
      * Elle écrase les anciennes valeurs du projet, supprime ses anciennes associations de stacks
      * dans la table pivot, puis insère les nouvelles associations fournies par l'entité.
      *
-     * @param ProjectEntity $projectEntity L'entité du projet contenant l'ID et les données modifiées.
-     * @return bool True si la mise à jour et la synchronisation des stacks ont réussi, false sinon.
+     * @param ProjectEntity $projectEntity L'entité du projet à modifier.
+     * @throws ProjectException Lancée si la modification du projet échoue.
+     * @throws StackException Lancée si la mise à jour des stacks échoue.
+     * @throws Exception Pour toute autre erreur globale.
      */
-    public function update(ProjectEntity $projectEntity): bool
+    public function update(ProjectEntity $projectEntity): void
     {
-        $sql = "UPDATE projects SET title = :title, description = :description, description_shortened = :description_shortened, github_link = :github_link, image_full = :image_full WHERE id = :id";
 
-        $this->database->beginTransaction();
-
-        $stmt = $this->database->prepare($sql);
-        $result = $stmt->execute([
-            "id" => $projectEntity->getId(),
-            "title" => $projectEntity->getTitle(),
-            "description" => $projectEntity->getDescription(),
-            "description_shortened" => $projectEntity->getDescriptionShortened(),
-            "image_full" => $projectEntity->getImageUri(),
-            "github_link" => $projectEntity->getGithubUrl()
-        ]);
-
-        if (!$result) {
-            $this->database->rollBack();
-            return false;
-        }
-
-        $deleteStmt = $this->database->prepare("DELETE FROM project_stacks WHERE project_id=:project_id");
-        $deleteStmt->execute(["project_id" => $projectEntity->getId()]);
-
-        $stmtStack = $this->database->prepare("INSERT INTO project_stacks (project_id, stack_id) VALUES (:project_id, :stack_id)");
-        foreach ($projectEntity->getStacks() as $stack) {
-            $stackResult = $stmtStack->execute(["project_id" => $projectEntity->getId(), "stack_id" => $stack->getId()]);
-            if (!$stackResult) {
-                $this->database->rollBack();
-                return false;
+        try {
+            $this->database->beginTransaction();
+            try {
+                $sql = "UPDATE projects SET title = :title, description = :description, description_shortened = :description_shortened, github_link = :github_link, image_full = :image_full WHERE id = :id";
+                $stmt = $this->database->prepare($sql);
+                $stmt->execute([
+                    "id" => $projectEntity->getId(),
+                    "title" => $projectEntity->getTitle(),
+                    "description" => $projectEntity->getDescription(),
+                    "description_shortened" => $projectEntity->getDescriptionShortened(),
+                    "image_full" => $projectEntity->getImageUri(),
+                    "github_link" => $projectEntity->getGithubUrl()
+                ]);
+            } catch (PDOException $e) {
+                throw ProjectException::updateFailed($projectEntity->getTitle(), $e);
             }
-        }
 
-        $this->database->commit();
-        return true;
+            try {
+                $deleteStmt = $this->database->prepare("DELETE FROM project_stacks WHERE project_id=:project_id");
+                $deleteStmt->execute(["project_id" => $projectEntity->getId()]);
+
+                $stmtStack = $this->database->prepare("INSERT INTO project_stacks (project_id, stack_id) VALUES (:project_id, :stack_id)");
+                foreach ($projectEntity->getStacks() as $stack) {
+                    $stmtStack->execute(["project_id" => $projectEntity->getId(), "stack_id" => $stack->getId()]);
+                }
+            } catch (PDOException $e) {
+                throw StackException::associateFailed($projectEntity->getTitle(), $e);
+            }
+
+            $this->database->commit();
+
+        } catch (Exception $e) {
+            if ($this->database->inTransaction()) {
+                $this->database->rollBack();
+            }
+            throw $e;
+        }
     }
 
     /**
      * Supprime le projet définit par l'id en base.
      * * Cette méthode utilise une transaction SQL pour garantir la cohérence des données.
      * @param int $id L'identifiant en base du projet.
-     * @return bool True si la suppression du projet a réussi, false sinon.
+     * @throws ProjectException Lancée si la suppression du projet échoue.
      */
-    public function delete(int $id): bool
+    public function delete(int $id): void
     {
-        $stacksSql = "DELETE FROM project_stacks WHERE project_id=:project_id";
-        $projectSql = "DELETE FROM projects WHERE id=:project_id";
+        try {
+            $stacksSql = "DELETE FROM project_stacks WHERE project_id=:project_id";
+            $projectSql = "DELETE FROM projects WHERE id=:id";
 
-        $this->database->beginTransaction();
+            $this->database->beginTransaction();
 
-        $stackStmt = $this->database->prepare($stacksSql);
-        $stackResult = $stackStmt->execute(["project_id" => $id]);
+            $stackStmt = $this->database->prepare($stacksSql);
+            $stackStmt->execute(["project_id" => $id]);
 
-        if (!$stackResult) {
-            $this->database->rollBack();
-            return false;
+            $projectStmt = $this->database->prepare($projectSql);
+            $projectStmt->execute(["id" => $id]);
+
+
+            $this->database->commit();
+        } catch (PDOException $e) {
+            if ($this->database->inTransaction()) {
+                $this->database->rollBack();
+            }
+            throw ProjectException::deleteFailed($id, $e);
         }
-
-        $projectStmt = $this->database->prepare($projectSql);
-        $projectResult = $projectStmt->execute(["project_id" => $id]);
-
-        if (!$projectResult) {
-            $this->database->rollBack();
-            return false;
-        }
-
-        $this->database->commit();
-        return true;
     }
 }
