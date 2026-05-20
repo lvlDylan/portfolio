@@ -41,7 +41,7 @@ if (contactForm) {
         try {
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Envoi en cours...';
-            const response = await fetch('http://localhost:8080/api/contact', {
+            const response = await fetch('https://dylanlv.dev/api/contact', {
                 method: 'POST',
                 body: formData
             });
