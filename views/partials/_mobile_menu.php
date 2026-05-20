@@ -9,12 +9,11 @@
 </nav>
 
 <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+    <div class="offcanvas-header mt-1">
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="ratio ratio-1x1 rounded-circle bg-primary-subtle mx-auto mb-3 w-50" id="avatar_container_mobile">
-        <img src="/assets/images/dylan.jpg" alt="Lavieille Dylan" class="rounded-circle"/>
+        <img src="/img/dylan.jpg" alt="Lavieille Dylan" class="rounded-circle"/>
     </div>
     <div class="offcanvas-body d-flex flex-column">
 
