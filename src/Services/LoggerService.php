@@ -9,9 +9,16 @@ use Monolog\Processor\WebProcessor;
 
 class LoggerService
 {
+    /**
+     * @var Logger|null L'unique instance de connexion PDO.
+     */
+    private static ?Logger $logger = null;
 
-    private static ?Logger $logger;
-
+    /**
+     * Récupère l'instance unique du logger.
+     * * Si l'instance n'existe pas encore, elle est initialisée.
+     * @return Logger L'instance active de la connexion PDO.
+     */
     public static function getLogger(): Logger
     {
         if (self::$logger == null) {
