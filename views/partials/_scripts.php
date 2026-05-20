@@ -24,7 +24,7 @@
 <script>
     new Typed('#typing-text', {
         strings: [
-            "recherche un stage du 26 mai au 4 juillet."
+            "recherche un stage dans la période hivernale 2026/2027 (Décembre / Janvier)."
         ],
         typeSpeed: 50,
         backSpeed: 25,
