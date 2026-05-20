@@ -5,6 +5,7 @@ use App\Exceptions\Auth\AuthException;
 use App\Exceptions\Auth\ForbiddenException;
 
 use App\Middlewares\AuthMiddleware;
+use App\Services\LoggerService;
 
 /**
  * Gère le routage de l'application.
@@ -95,6 +96,7 @@ class Router
         }
 
         $method = $_SERVER['REQUEST_METHOD'];
+        $logger = LoggerService::getLogger();
 
         foreach ($this->routes as $route) {
 
@@ -108,9 +110,15 @@ class Router
                         try {
                             AuthMiddleware::accept();
                         } catch (AuthException $e) {
+                            $logger->info("Échec d'autorisation d'un utilisateur sur une route api.", [
+                                "exception" => $e
+                            ]);
                             http_response_code(401);
                             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
                         } catch (ForbiddenException $e) {
+                            $logger->info("Refus d'autorisation d'un utilisateur sur une route api.", [
+                                "exception" => $e
+                            ]);
                             http_response_code(403);
                             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
                         }
@@ -122,13 +130,16 @@ class Router
                     try {
                         $controller->$action();
                     } catch (\PDOException $e) {
+                        $logger->critical("Erreur lors du chargement d'une page !", [
+                            "exception" => $e
+                        ]);
                         $this->render500();
                     }
 
                 } else {
-
                     if (str_starts_with($uri, "/api/")) {
                         header("Content-Type: application/json; charset=utf-8");
+                        $logger->info("Erreur de méthode d'un utilisateur sur une route api.");
                         http_response_code(405);
                         echo json_encode([
                             "status" => "error",
@@ -136,6 +147,7 @@ class Router
                         ]);
                     } else {
                         header("HTTP/1.1 405 Method Not Allowed");
+                        $logger->info("Erreur de méthode d'un utilisateur sur la page d'accueil.");
                         http_response_code(405);
                         echo "405 - Méthode non autorisée";
                     }
@@ -147,12 +159,14 @@ class Router
 
         if (str_starts_with($uri, "/api/")) {
             header("Content-Type: application/json; charset=utf-8");
+            $logger->info("Erreur de chemin d'un utilisateur sur une route api.");
             http_response_code(404);
             echo json_encode([
                 "status" => "error",
                 "message" => "Cette API n'existe pas."
             ]);
         } else {
+            $logger->info("Erreur de chemin sur la page principale.");
             $this->render404();
         }
 

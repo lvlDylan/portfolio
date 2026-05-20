@@ -7,6 +7,9 @@ use App\Exceptions\Format\JSONException;
 use App\Exceptions\Format\ValidException;
 use App\Services\Database;
 use App\Services\Jwt;
+use App\Services\LoggerService;
+use Exception;
+use Monolog\Logger;
 use PDO;
 use PDOException;
 
@@ -24,11 +27,18 @@ class AuthController
     private ?PDO $database;
 
     /**
+     * Instance du logger.
+     * @var Logger
+     */
+    private Logger $logger;
+
+    /**
      * Initialise le contrôleur en récupérant l'instance Singleton de la base de données.
      */
     public function __construct()
     {
         $this->database = Database::getInstance();
+        $this->logger = LoggerService::getLogger();
     }
 
     /**
@@ -76,9 +86,21 @@ class AuthController
             ]);
 
         } catch (JSONException|ValidException $e) {
+            $this->logger->info("Échec de connexion invalide", [
+                "exception" => $e,
+                "user_data" => [
+                    "username" => $data["username"] ?? "Non fourni",
+                ]
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (AuthException $e) {
+            $this->logger->info("Échec de connexion rejetée", [
+                "exception" => $e,
+                "user_data" => [
+                    "username" => $data["username"] ?? "Non fourni",
+                ]
+            ]);
             http_response_code(401);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (PDOException $e) {
@@ -86,6 +108,23 @@ class AuthController
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
             }
+
+            $this->logger->critical("Erreur base de donnée lors du login", [
+                "exception" => $e,
+                "user_data" => [
+                    "username" => $data["username"] ?? "Non fourni",
+                ]
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            if ($this->database->inTransaction()) {
+                $this->database->rollBack();
+            }
+            $this->logger->error("Erreur système imprévue lors du login", [
+                'exception' => $e,
+                'username'  => $data["username"] ?? "Non fourni"
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }
@@ -115,12 +154,27 @@ class AuthController
             http_response_code(204);
 
         } catch (JSONException|ValidException $e) {
+            $this->logger->info("Échec de déconnexion invalide", [
+                "exception" => $e
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (PDOException $e) {
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
             }
+            $this->logger->critical("Erreur base de donnée lors du logout", [
+                "exception" => $e,
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            if ($this->database->inTransaction()) {
+                $this->database->rollBack();
+            }
+            $this->logger->error("Erreur système imprévue lors du logout", [
+                'exception' => $e
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }
@@ -165,15 +219,33 @@ class AuthController
             ]);
 
         } catch (JSONException|ValidException $e) {
+            $this->logger->info("Échec de rafraîchissement de token invalide", [
+                "exception" => $e
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (AuthException $e) {
+            $this->logger->info("Tentative de rafraîchissement de token rejetée", [
+                "exception" => $e
+            ]);
             http_response_code(401);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (PDOException $e) {
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
             }
+            $this->logger->critical("Erreur base de donnée lors du rafraîchissement de token", [
+                "exception" => $e
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            if ($this->database->inTransaction()) {
+                $this->database->rollBack();
+            }
+            $this->logger->error("Erreur système imprévue lors du rafraîchissement de token", [
+                "exception" => $e
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }

@@ -6,6 +6,10 @@ use App\Exceptions\Format\ValidException;
 use App\Exceptions\StackException;
 use App\Models\Api\StackModel;
 use App\Models\Entities\StackEntity;
+use App\Services\LoggerService;
+use Exception;
+use Monolog\Logger;
+use PDOException;
 
 /**
  * Class StackController
@@ -15,6 +19,20 @@ use App\Models\Entities\StackEntity;
  */
 class StackController
 {
+
+    /**
+     * Instance du logger.
+     * @var Logger
+     */
+    private Logger $logger;
+
+    /**
+     * Initialise le contrôleur en récupérant l'instance du logger.
+     */
+    public function __construct()
+    {
+        $this->logger = LoggerService::getLogger();
+    }
 
     /**
      * Récupère la liste complète des stacks techniques.
@@ -34,10 +52,25 @@ class StackController
                 "data" => $stacks
             ]);
         } catch (StackException $e) {
+            $this->logger->error("Erreur lors de la récupération des compétences (stacks)", [
+                "exception" => $e
+            ]);
             echo json_encode([
                 "status" => "error",
                 "count" => 0,
             ]);
+        } catch (PDOException $e) {
+            $this->logger->critical("Erreur base de données lors du chargement des compétences", [
+                "exception" => $e
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            $this->logger->error("Erreur système imprévue lors du chargement des compétences", [
+                "exception" => $e
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }
     }
 
@@ -61,11 +94,32 @@ class StackController
             http_response_code(201);
             echo json_encode(["status" => "success", "message" => "La stack {$stack->getName()} a été ajoutée en base."]);
         } catch (ValidException $e) {
+            $this->logger->info("Données de compétence invalides lors de la création", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (StackException $e) {
+            $this->logger->error("Échec de l'insertion de la stack en base de données", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        } catch (PDOException $e) {
+            $this->logger->critical("Erreur base de données lors de la création d'une compétence", [
+                "exception" => $e
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        }
+        catch (Exception $e) {
+            $this->logger->error("Erreur système imprévue lors de la création d'une stack", [
+                "exception" => $e
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }
     }
 
@@ -96,11 +150,31 @@ class StackController
             http_response_code(200);
             echo json_encode(["status" => "success", "message" => "La stack {$stack->getName()} a été modifiée en base."]);
         } catch (ValidException $e) {
+            $this->logger->info("Données de compétence invalides lors de la modification", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (StackException $e) {
+            $this->logger->error("Échec de la modification de la stack en base de données", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        } catch (PDOException $e) {
+            $this->logger->critical("Erreur base de données lors de la mise à jour d'une compétences", [
+                "exception" => $e
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            $this->logger->error("Erreur système imprévue lors de la mise à jour d'une stack", [
+                "exception" => $e,
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }
     }
 
@@ -126,11 +200,29 @@ class StackController
             $stackModel->delete($data["id"]);
             http_response_code(204);
         } catch (ValidException $e) {
+            $this->logger->error("Échec de la suppression de la stack", [
+                "exception" => $e,
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (StackException $e) {
+            $this->logger->error("Échec de la suppression de la stack", [
+                "exception" => $e,
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        } catch (PDOException $e) {
+            $this->logger->critical("Erreur base de données lors de la suppression d'une compétence", [
+                "exception" => $e
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            $this->logger->error("Erreur système imprévue lors de la suppression d'une stack", [
+                "exception" => $e,
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }
 
     }

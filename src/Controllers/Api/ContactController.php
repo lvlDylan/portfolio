@@ -5,6 +5,10 @@ namespace App\Controllers\Api;
 use App\Exceptions\BotException;
 use App\Exceptions\Format\ValidException;
 use App\Services\Email;
+use App\Services\LoggerService;
+use Exception;
+use Monolog\Logger;
+use PDOException;
 
 /**
  * Class ContactController
@@ -13,6 +17,20 @@ use App\Services\Email;
  */
 class ContactController
 {
+
+    /**
+     * Instance du logger.
+     * @var Logger
+     */
+    private Logger $logger;
+
+    /**
+     * Initialise le contrôleur en récupérant l'instance du logger.
+     */
+    public function __construct()
+    {
+        $this->logger = LoggerService::getLogger();
+    }
 
     /**
      * Point d'entrée pour la soumission du formulaire de contact.
@@ -50,12 +68,39 @@ class ContactController
             }
 
         } catch (BotException $e) {
+            $this->logger->info("Formulaire de contact intercepté (Bot)", [
+                "exception" => $e,
+            ]);
             http_response_code(200);
             echo json_encode(["status" => "success", "message" => $e->getMessage()]);
         } catch (ValidException $e) {
+            $this->logger->info("Données de formulaire de contact invalides", [
+                "exception" => $e,
+                "user_data" => [
+                    "email" => $_POST["email"] ?? "Non fourni",
+                    "name"  => $_POST["name"] ?? "Non fourni"
+                ]
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
-        } catch (\Exception $e) {
+        } catch (PDOException $e) {
+            $this->logger->critical("Erreur base de données lors de la soumission du formulaire de contact", [
+                "exception" => $e,
+                "user_data" => [
+                    "email" => $_POST["email"] ?? "Non fourni",
+                    "name"  => $_POST["name"] ?? "Non fourni"
+                ]
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            $this->logger->error("Erreur technique lors de l'envoi du mail via Brevo", [
+                "exception" => $e,
+                "user_data" => [
+                    "email" => $_POST["email"] ?? "Non fourni",
+                    "name"  => $_POST["name"] ?? "Non fourni"
+                ]
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }

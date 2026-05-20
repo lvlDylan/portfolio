@@ -9,7 +9,10 @@ use App\Models\Api\ProjectModel;
 use App\Models\Api\StackModel;
 use App\Models\Entities\ProjectEntity;
 use App\Models\Entities\StackEntity;
+use App\Services\LoggerService;
 use Exception;
+use Monolog\Logger;
+use PDOException;
 
 /**
  * Class ProjectController
@@ -19,6 +22,21 @@ use Exception;
  */
 class ProjectController
 {
+
+    /**
+     * Instance du logger.
+     * @var Logger
+     */
+    private Logger $logger;
+
+
+    /**
+     * Initialise le contrôleur en récupérant l'instance du logger.
+     */
+    public function __construct() {
+        $this->logger = LoggerService::getLogger();
+    }
+
     /**
      * Récupère la liste de tous les projets.
      * * Initialise le modèle ProjectModel, extrait l'ensemble des données
@@ -38,10 +56,19 @@ class ProjectController
                 "data" => $projects
             ]);
         } catch (ProjectException $e) {
+            $this->logger->error("Erreur de récupération des projets", [
+                "exception" => $e
+            ]);
             echo json_encode([
                 "status" => "error",
                 "count" => 0,
             ]);
+        } catch (Exception $e) {
+            $this->logger->error("Erreur système imprévue lors de la récupération des projets", [
+                "exception" => $e
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }
     }
 
@@ -66,12 +93,30 @@ class ProjectController
             http_response_code(201);
             echo json_encode(["status" => "success", "data" => $project]);
         } catch (ValidException $e) {
+            $this->logger->info("Données invalides lors de la création d'un projet", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (ProjectException|StackException $e) {
+            $this->logger->error("Échec de l'insertion du projet en base de données", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
-        } catch (Exception $exception) {
+        } catch (PDOException $e) {
+            $this->logger->critical("Erreur base de données lors de la création d'un projet", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            $this->logger->error("Erreur système imprévue lors de la création d'un projet", [
+                "exception" => $e
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => "Une erreur interne est survenue."]);
         }
@@ -107,12 +152,30 @@ class ProjectController
 
 
         } catch (ValidException $e) {
+            $this->logger->info("Données invalides lors de la mise à jour du projet", [
+                "exception" => $e,
+                "payload"    => $data ?? null
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (ProjectException|StackException $e) {
+            $this->logger->error("Échec de la mise à jour du projet en base de données", [
+                "exception" => $e,
+                "payload"    => $data ?? null
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        } catch (PDOException $e) {
+            $this->logger->critical("Erreur base de données lors de la mise à jour d'un projet", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         } catch (Exception $e) {
+            $this->logger->error("Erreur système imprévue lors de la modification d'un projet", [
+                "exception" => $e,
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => "Une erreur interne est survenue."]);
         }
@@ -121,7 +184,7 @@ class ProjectController
 
     /**
      * Traite la requête de suppression d'un projet existant.
-     * * Cette méthode s'assure de la présence de l'identifiant unique du projet.
+     * * Cette méthode s'assure de la présence de Brevol'identifiant unique du projet.
      * @return void Interrompt l'exécution après l'envoi de la réponse JSON (204, 400 ou 500).
      */
     public function deleteProject(): void
@@ -141,11 +204,33 @@ class ProjectController
             http_response_code(204);
 
         } catch (ValidException $e) {
+            $this->logger->error("Échec de la suppression du projet", [
+                "exception" => $e,
+                "payloads" => $data ?? null
+            ]);
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
         } catch (ProjectException $e) {
+            $this->logger->error("Erreur système imprévue lors de la suppression d'un projet", [
+                "exception" => $e,
+                "payloads" => $data ?? null
+            ]);
             http_response_code(500);
             echo json_encode(["status" => "error", "message" => "Le projet n'a pas été supprimé suite à une erreur serveur."]);
+        } catch (PDOException $e) {
+            $this->logger->critical("Erreur base de données lors de la suppression d'un projet", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
+        } catch (Exception $e) {
+            $this->logger->error("Erreur base de données lors de la création d'un projet", [
+                "exception" => $e,
+                "payload"   => $data ?? null
+            ]);
+            http_response_code(500);
+            echo json_encode(["status" => "error", "message" => "Une erreur technique est survenue."]);
         }
     }
 
