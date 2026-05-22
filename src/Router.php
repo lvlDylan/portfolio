@@ -115,12 +115,14 @@ class Router
                             ]);
                             http_response_code(401);
                             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+                            exit;
                         } catch (ForbiddenException $e) {
                             $logger->info("Refus d'autorisation d'un utilisateur sur une route api.", [
                                 "exception" => $e
                             ]);
                             http_response_code(403);
                             echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+                            exit;
                         }
 
                     }
