@@ -1,0 +1,16 @@
+# Dépendances
+vendor/
+assets/scss/
+
+# Secrets et environnement
+.env
+*.sql
+
+# Logs locaux
+logs/*
+!logs/.gitkeep
+
+# Documentation inutile en prod
+README.md
+LICENSE
+.git/

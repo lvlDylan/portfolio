@@ -19,8 +19,7 @@ public/assets/css/*.map
 .env
 .env.local
 .env.*.local
-portfolio_backup.sql
-remote_deploy_env.sh
+*.sql
 TODO
 
 # Avoid CV on GITHUB

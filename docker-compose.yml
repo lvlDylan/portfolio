@@ -1,0 +1,33 @@
+services:
+  php-server:
+    image: portfolio-php-fpm:latest
+    build: .
+    volumes:
+      - ".:/var/www/html"
+    env_file:
+      - .env
+    depends_on:
+      - mariadb-server
+      - redis-server
+  nginx-server:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ".:/var/www/html"
+      - "./nginx/nginx.conf:/etc/nginx/conf.d/default.conf"
+    depends_on:
+      - php-server
+  mariadb-server:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASS}"
+    volumes:
+      - "portfolio-db:/var/lib/mysql"
+  redis-server:
+    image: redis:alpine
+volumes:
+  portfolio-db:
