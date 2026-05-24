@@ -1,0 +1,17 @@
+{
+  "name": "scss-portfolio",
+  "version": "0.0.1",
+  "description": "SCSS établi pour mon portfolio.",
+  "license": "MIT",
+  "author": "Lavieille Dylan",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "sass assets/scss/main.scss public/css/styles.css --style=compressed --no-source-map",
+    "watch": "sass assets/scss/main.scss public/css/styles.css --watch"
+  },
+  "devDependencies": {
+    "bootstrap": "^5.3.8",
+    "sass": "^1.100.0"
+  }
+}

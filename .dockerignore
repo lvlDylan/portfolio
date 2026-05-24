@@ -1,5 +1,6 @@
 # Dépendances
 vendor/
+node_modules/
 assets/scss/
 
 # Secrets et environnement

@@ -2,8 +2,7 @@
 
 [![License](https://img.shields.io/github/license/lvlDylan/portfolio?style=flat-square&maxAge=0)](LICENSE)
 
-> **Bienvenue sur mon portfolio !** Ce projet regroupe mes travaux, mes compétences et mon parcours en tant que
-> développeur. Il sert de vitrine pour mes futures collaborations.
+> **Bienvenue sur mon portfolio !** Ce projet regroupe mes travaux, mes compétences et mon parcours en tant que développeur. Il sert de vitrine pour mes futures collaborations.
 
 ---
 
@@ -15,15 +14,14 @@
 
 ## 🚀 À propos
 
-Je suis **Dylan Lavieille**, un développeur passionné.
-Ce portfolio a été conçu pour être performant, accessible et minimaliste afin de mettre en avant l'essentiel : mes
-projets.
+Je suis **Dylan Lavieille**, un développeur passionné.  
+Ce portfolio a été conçu pour être performant, accessible et minimaliste afin de mettre en avant l'essentiel : mes projets.
 
-Ce projet a solicité l'aide de l'intelligence artificielle [Gemini](https://gemini.google.com/) pour la relecture de code et l'écriture de la documentation php.
+*Ce projet a sollicité l'aide de l'intelligence artificielle [Gemini](https://gemini.google.com/) pour la relecture de code et l'écriture de la documentation PHP.*
 
 ### ✨ Fonctionnalités du site
 
-* **Design Responsive** : S'adapte parfaitement aux mobiles, tablettes et desktops.
+* **Design Responsive** : S'adapte parfaitement aux mobiles, tablettes et ordinateurs.
 * **Mode Sombre/Clair** : Thème dynamique respectant les préférences système.
 * **Animations fluides** : Transitions douces pour une meilleure expérience utilisateur.
 * **API Sécurisée** : Endpoints CRUD protégés contre les accès non autorisés.
@@ -34,47 +32,48 @@ Ce projet a solicité l'aide de l'intelligence artificielle [Gemini](https://gem
 
 **Back-end & Sécurité :**
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-W?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
 
 **Front-end :**
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![Sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
-![NodeJS](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 
 **Environnement & Outils :**
 ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=archlinux&logoColor=white)
 ![PhpStorm](https://img.shields.io/badge/PhpStorm-000000?style=for-the-badge&logo=phpstorm&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ed?style=for-the-badge&logo=docker&logoColor=white)
+![NodeJS](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 
-Ce projet est un site dynamique.
-
-### 1. Prérequis
-
-Assurez-vous d'avoir [PHP](https://php.net/) installé sur votre machine.
-
-#### Optionnel:
-*Ce projet utilise Scss pour modifier les variables Bootstrap.*
-*Assurez-vous d'avoir un compilateur scss pour en profiter et [NodeJS](https://nodejs.org) pour compiler Boostrap.*
-
-### 2. Installation
-
-Clonez le projet et lancer le :
-
-```bash
-git clone https://github.com/lvlDylan/portfolio.git
-cd portfolio
-php -S localhost -t public
-```
-
-Vous pouvez désormais y accéder sur http://localhost
+*Ce projet est un site dynamique alimenté par une base de données.*
 
 ---
 
+## ⚙️ Installation et Configuration
+
+### 1. Prérequis
+
+Assurez-vous d'avoir [Docker](https://www.docker.com/) installé sur votre machine.
+
+> **Optionnel (Customisation du Design) :**  
+> Le projet intègre [SCSS](https://sass-lang.com/documentation/syntax/) pour modifier en profondeur les variables Bootstrap. Vous devez impérativement avoir [Node.js](https://nodejs.org/) installé sur votre machine afin de pouvoir compiler les sources SCSS situées dans le dossier `assets/`.
+
+### 2. Lancement du projet
+
+Clonez le projet et lancez-le avec Docker Compose :
+
+```bash
+# Cloner le dépôt
+git clone https://github.com/lvlDylan/portfolio.git
+cd portfolio
+
+# Lancer les conteneurs Docker
+docker compose up --build -d
+```
+
+---
 ## 📂 Structure du projet
-
-Voici un aperçu rapide de l'organisation des fichiers :
-
 ```text
 .
 ├── assets/                 # Sources Front-end (non compilées)
@@ -101,12 +100,15 @@ Voici un aperçu rapide de l'organisation des fichiers :
 │   ├── Models/             # Interaction avec la base de données
 │   │   ├── Api/            # Logique spécifique aux données API
 │   │   └── ...             # Modèles Projects, Skills, etc.
-│   ├── Services/           # Classes utilitaires (Database Singleton)
+│   ├── Services/           # Classes utilitaires (Database Singleton...)
 │   └── Router.php          # Gestionnaire de routes (Mapping URL -> Action)
 ├── views/                  # Fichiers de rendu (HTML/PHP)
 │   ├── partials/           # Éléments communs (Header, Footer, Sidebar)
 │   ├── sections/           # Blocs de contenu modulaires (Hero, Projects, ...)
 │   └── layout.php          # Gabarit principal de l'application
+├── .dockerignore           # Fichiers et dossiers ignorés par Docker
+├── Dockerfile              # Configuration de l'image Docker (PHP/Serveur Web)
 ├── composer.json           # Dépendances PHP (Dotenv, etc.)
+├── docker-compose.yml      # Orchestration des conteneurs (App, Base de données, Redis, Nginx)
 └── package.json            # Dépendances Node (Sass compiler)
 ```
