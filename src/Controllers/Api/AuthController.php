@@ -22,9 +22,9 @@ class AuthController
 {
     /**
      * Instance de connexion à la base de données.
-     * @var PDO|null
+     * @var PDO
      */
-    private ?PDO $database;
+    private PDO $database;
 
     /**
      * Instance du logger.
