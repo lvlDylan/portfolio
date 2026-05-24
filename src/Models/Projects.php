@@ -5,8 +5,13 @@ namespace App\Models;
 use App\Exceptions\ProjectException;
 use App\Models\Entities\ProjectEntity;
 use App\Services\Database;
+use App\Services\LoggerService;
+use App\Services\RedisService;
+use Monolog\Logger;
 use PDO;
 use PDOException;
+use Redis;
+use RedisException;
 
 /**
  * Class Projects
@@ -23,12 +28,25 @@ readonly class Projects
     private PDO $database;
 
     /**
+     * @var Redis|null Instance de connexion au serveur Redis.
+     */
+    private ?Redis $cache;
+
+    /**
+     * Instance du logger.
+     * @var Logger
+     */
+    private Logger $logger;
+
+    /**
      * Projects constructor.
      * Initialise la connexion via le Singleton Database.
      */
     public function __construct()
     {
         $this->database = Database::getInstance();
+        $this->cache = RedisService::getInstance();
+        $this->logger = LoggerService::getLogger();
     }
 
     /**
@@ -87,6 +105,16 @@ readonly class Projects
      * */
     public function getProjects(): array
     {
+
+        try {
+            $cached = $this->cache->get("project-vue:list");
+            if ($cached !== false) {
+                return json_decode($cached, true);
+            }
+        } catch (RedisException $e) {
+            $this->logger->warning("Échec lors de la tentative de récupération via le cache REDIS " . $e->getMessage());
+        }
+
         $projects = [];
 
         $rawProjects = $this->findAll();
@@ -103,6 +131,11 @@ readonly class Projects
                 "icons" => $row["stack_icons"] ? explode(",", $row["stack_icons"]) : [],
                 "colors" => $row["stack_colors"] ? explode(",", $row["stack_colors"]) : []
             ];
+        }
+
+
+        if (isset($this->cache)) {
+            $this->cache->setex("project-vue:list", 2 * 60  * 60, json_encode($projects));
         }
 
         return $projects;

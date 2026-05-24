@@ -5,8 +5,13 @@ namespace App\Models;
 use App\Exceptions\SkillsException;
 use App\Exceptions\StackException;
 use App\Services\Database;
+use App\Services\LoggerService;
+use App\Services\RedisService;
+use Monolog\Logger;
 use PDO;
 use PDOException;
+use Redis;
+use RedisException;
 
 /**
  * Class Skills
@@ -24,12 +29,25 @@ readonly class Skills
     private ?PDO $database;
 
     /**
+     * @var Redis|null Instance de connexion au serveur Redis.
+     */
+    private ?Redis $cache;
+
+    /**
+     * Instance du logger.
+     * @var Logger
+     */
+    private Logger $logger;
+
+    /**
      * Skills constructor.
      * * Initialise la connexion à la base de données via le Singleton Database.
      */
     public function __construct()
     {
-        $this->database = Database::getInstance();
+       $this->database = Database::getInstance();
+       $this->cache = RedisService::getInstance();
+       $this->logger = LoggerService::getLogger();
     }
 
     /**
@@ -111,6 +129,16 @@ readonly class Skills
      */
     public function getSkills(): array
     {
+
+        try {
+            $cached = $this->cache->get("skills-vue:list");
+            if ($cached !== false) {
+                return json_decode($cached, true);
+            }
+        } catch (RedisException $e) {
+            $this->logger->warning("Échec lors de la tentative de récupération via le cache REDIS " . $e->getMessage());
+        }
+
         $skills = [];
 
         $rawSkills = $this->findAll();
@@ -129,6 +157,10 @@ readonly class Skills
                     'icons'       => explode(",", $row["stack_icons"])
                 ];
             }
+        }
+
+        if (isset($this->cache)) {
+            $this->cache->setex("skills-vue:list", 2 * 60 * 60, json_encode($skills));
         }
 
         return $skills;

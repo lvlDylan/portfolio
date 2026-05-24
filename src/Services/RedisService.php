@@ -33,7 +33,7 @@ class RedisService
 
             // Initialisation et connexion au serveur Redis
             self::$instance = new Redis();
-            self::$instance->connect($config["redis_host"]);
+            self::$instance->connect($config["redis_host"], $config["redis_port"]);
         }
 
         return self::$instance;

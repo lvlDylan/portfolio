@@ -6,9 +6,14 @@ use App\Exceptions\ProjectException;
 use App\Exceptions\StackException;
 use App\Models\Entities\ProjectEntity;
 use App\Services\Database;
+use App\Services\LoggerService;
+use App\Services\RedisService;
 use Exception;
+use Monolog\Logger;
 use PDO;
 use PDOException;
+use Redis;
+use RedisException;
 
 /**
  * Class ProjectModel
@@ -24,16 +29,29 @@ class ProjectModel
     private ?PDO $database;
 
     /**
+     * @var Redis|null Instance de connexion au serveur Redis.
+     */
+    private ?Redis $cache;
+
+    /**
+     * Instance du logger.
+     * @var Logger
+     */
+    private Logger $logger;
+
+    /**
      * ProjectModel constructor.
      * Initialise la connexion à la base de données via le Singleton Database.
      */
     public function __construct()
     {
         $this->database = Database::getInstance();
+        $this->cache = RedisService::getInstance();
+        $this->logger = LoggerService::getLogger();
     }
 
     /**
-     * Récupère l'ensemble des projets présents en base de données.
+     * Récupère l'ensemble des projets présents en cache ou base de données.
      * * @return array<int, array{
      * id: int,
      * title: string,
@@ -47,8 +65,28 @@ class ProjectModel
      */
     public function findAll(): array
     {
+
         try {
-            return $this->database->query("SELECT * FROM projects")->fetchAll(PDO::FETCH_ASSOC);
+            $cachedProjects = $this->cache->get("project-api:list");
+            if ($cachedProjects !== false) {
+                return json_decode($cachedProjects, true);
+            }
+        } catch (RedisException $e) {
+            $this->logger->warning("Échec lors de la tentative de récupération via le cache REDIS " . $e->getMessage());
+        }
+
+        try {
+            $projects = $this->database->query("SELECT * FROM projects")->fetchAll(PDO::FETCH_ASSOC);
+
+            if (isset($this->cache)) {
+                try {
+                    $this->cache->setex("project-api:list", 60 * 60 * 2, json_encode($projects));
+                } catch (RedisException $e) {
+                    $this->logger->warning("Échec lors de la tentative d'écriture dans le cache REDIS " . $e->getMessage());
+                }
+            }
+
+            return $projects;
         } catch (PDOException $e) {
             throw ProjectException::fetchFailed($e);
         }
@@ -83,7 +121,7 @@ class ProjectModel
                 ]);
 
                 $id = $this->database->lastInsertId();
-            } catch (PDOException ) {
+            } catch (PDOException $e) {
                 throw ProjectException::insertFailed($projectEntity->getTitle(), $e);
             }
 
@@ -98,7 +136,7 @@ class ProjectModel
             }
 
             $this->database->commit();
-
+            $this->invalidateCache();
         } catch (Exception $e) {
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
@@ -153,7 +191,7 @@ class ProjectModel
             }
 
             $this->database->commit();
-
+            $this->invalidateCache();
         } catch (Exception $e) {
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
@@ -184,11 +222,26 @@ class ProjectModel
 
 
             $this->database->commit();
+            $this->invalidateCache();
         } catch (PDOException $e) {
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
             }
             throw ProjectException::deleteFailed($id, $e);
+        }
+    }
+
+    /**
+     * Supprime la liste des projets du cache Redis pour forcer sa mise à jour.
+     */
+    private function invalidateCache(): void
+    {
+        if (isset($this->cache)) {
+            try {
+                $this->cache->del(["project-api:list", "project-vue:list"]);;
+            } catch (RedisException $e) {
+                $this->logger->warning("Échec de l'invalidation du cache REDIS après modification/suppresion/ajout d'un projet. : " . $e->getMessage());
+            }
         }
     }
 }

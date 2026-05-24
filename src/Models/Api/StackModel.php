@@ -5,8 +5,13 @@ namespace App\Models\Api;
 use App\Exceptions\StackException;
 use App\Models\Entities\StackEntity;
 use App\Services\Database;
+use App\Services\LoggerService;
+use App\Services\RedisService;
+use Monolog\Logger;
 use PDO;
 use PDOException;
+use Redis;
+use RedisException;
 
 /**
  * Class StackModel
@@ -22,12 +27,25 @@ class StackModel
     private ?PDO $database;
 
     /**
+     * @var Redis|null Instance de connexion au serveur Redis.
+     */
+    private ?Redis $cache;
+
+    /**
+     * Instance du logger.
+     * @var Logger
+     */
+    private Logger $logger;
+
+    /**
      * StackModel constructor.
      * * Initialise la connexion via le Singleton Database.
      */
     public function __construct()
     {
         $this->database = Database::getInstance();
+        $this->cache = RedisService::getInstance();
+        $this->logger = LoggerService::getLogger();
     }
 
     /**
@@ -43,8 +61,29 @@ class StackModel
      */
     public function findAll(): array
     {
+
         try {
-            return $this->database->query("SELECT * FROM stacks")->fetchAll(PDO::FETCH_ASSOC);
+            $cachedStacks = $this->cache->get("stacks:list");
+
+            if ($cachedStacks !== false) {
+                return json_decode($cachedStacks, true);
+            }
+        } catch (RedisException $e) {
+            $this->logger->warning("Échec lors de la tentative de récupération via le cache REDIS " . $e->getMessage());
+        }
+
+        try {
+            $stacks = $this->database->query("SELECT * FROM stacks")->fetchAll(PDO::FETCH_ASSOC);
+
+            if (isset($this->cache)) {
+                try {
+                    $this->cache->setex("stacks:list", 60 * 60 * 2, json_encode($stacks));
+                } catch (RedisException $e) {
+                    $this->logger->warning("Échec lors de la tentative d'écriture dans le cache REDIS " . $e->getMessage());
+                }
+            }
+
+            return $stacks;
         } catch (PDOException $e) {
             throw StackException::fetchFailed($e);
         }
@@ -88,6 +127,7 @@ class StackModel
                 "color_name" => $stackEntity->getColorName(),
             ]);
             $this->database->commit();
+            $this->invalidateCache();
         } catch (PDOException $e) {
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
@@ -120,6 +160,7 @@ class StackModel
                 "color_name" => $stackEntity->getColorName(),
             ]);
             $this->database->commit();
+            $this->invalidateCache();
         } catch (PDOException|StackException $e) {
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
@@ -143,11 +184,27 @@ class StackModel
             $sql = "DELETE FROM stacks WHERE id=:id";
             $stmt = $this->database->prepare($sql);
             $stmt->execute(["id" => $id]);
+            $this->database->commit();
+            $this->invalidateCache();
         } catch (PDOException $e) {
             if ($this->database->inTransaction()) {
                 $this->database->rollBack();
             }
             throw StackException::deleteFailed($id, $e);
+        }
+    }
+
+    /**
+     * Supprime la liste des projets du cache Redis pour forcer sa mise à jour.
+     */
+    private function invalidateCache(): void
+    {
+        if (isset($this->cache)) {
+            try {
+                $this->cache->del("stacks:list");
+            } catch (RedisException $e) {
+                $this->logger->warning("Échec de l'invalidation du cache REDIS après modification/suppresion/ajout d'une stack. : " . $e->getMessage());
+            }
         }
     }
 }
