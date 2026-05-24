@@ -9,7 +9,7 @@ require_once "../vendor/autoload.php";
 
 /** Appelle la librairie phpdotenv, et charge le fichier .env  */
 $dotenv = Dotenv\Dotenv::createImmutable(ROOT);
-$dotenv->load();
+$dotenv->safeLoad();
 
 date_default_timezone_set("Europe/Paris");
 
