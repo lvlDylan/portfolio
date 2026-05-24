@@ -29,7 +29,7 @@
 
                                 <?php if ($project['image_full']): ?>
                                     <img class="img-fluid rounded w-100 shadow-sm"
-                                         src="/assets/images/projets/<?= htmlspecialchars($project['image_full']) ?>"
+                                         src="/img/projects/<?= htmlspecialchars($project['image_full']) ?>"
                                          alt="<?= htmlspecialchars($project['title']) ?>"
                                          style="max-height: 400px; object-fit: cover;">
                                 <?php endif; ?>
